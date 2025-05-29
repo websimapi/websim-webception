@@ -72,11 +72,9 @@ body {
 }
 
 #sidebarCloseBtn {
-    background-color: #f3f4f6; /* Light grey background like active/hover */
-    color: #374151;
 }
 #sidebarCloseBtn:hover {
-    background-color: #e5e7eb; /* Slightly darker on hover */
+    background-color: #e5e7eb; 
 }
 
 .diamond-btn {
@@ -360,21 +358,26 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 8px 8px 8px; /* Match header padding, adjust left for button */
+    padding: 8px;
     border-bottom: 1px solid #e1e5e9;
     height: var(--header-height); /* Match main header height */
     flex-shrink: 0;
 }
 
+.sidebar-nav-controls-left,
+.sidebar-nav-controls-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .sidebar-top-nav .logo {
-    flex-grow: 1; /* Allow logo to take space */
-    text-align: center; /* Center the logo text if it expands */
+    flex-grow: 0;
+    text-align: left;
 }
 
 .sidebar-top-nav-actions-placeholder {
-    width: var(--sidebar-button-size); /* Match button size for balance */
-    height: var(--sidebar-button-size); /* Match button size */
-    flex-shrink: 0;
+    
 }
 
 .sidebar-header {
@@ -509,6 +512,14 @@ body {
 
 .stat-item i {
     font-size: 16px;
+}
+
+.nav-btn.sidebar-action-btn.active {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+.nav-btn.sidebar-action-btn.active:hover {
+    background-color: #e5e7eb;
 }
 
 .sidebar-content {

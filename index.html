@@ -157,14 +157,25 @@
 
     <aside class="sidebar hidden" id="sidebar">
         <div class="sidebar-top-nav">
-            <button class="nav-btn" id="sidebarCloseBtn">
-                <!-- SVG for X icon will be inserted by JS -->
-            </button>
-            <div class="logo sidebar-logo">
-                <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+            <div class="sidebar-nav-controls-left">
+                <button class="nav-btn sidebar-action-btn active" title="Branch/Remix">
+                    <i class="fas fa-random"></i>
+                </button>
+                <div class="nav-divider"></div>
+                <button class="nav-btn sidebar-action-btn" title="Creator Profile">
+                    <i class="far fa-user"></i>
+                </button>
+                <button class="nav-btn sidebar-action-btn heart-btn" title="Project Likes">
+                    <i class="far fa-heart"></i>
+                </button>
             </div>
-            <div class="sidebar-top-nav-actions-placeholder">
-                <!-- Empty for now, for layout balance -->
+            <div class="sidebar-nav-controls-right">
+                <div class="logo sidebar-logo">
+                    <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+                </div>
+                <button class="nav-btn" id="sidebarCloseBtn" title="Close Sidebar">
+                    <!-- SVG for X icon will be inserted by JS -->
+                </button>
             </div>
         </div>
         <div class="sidebar-header">
