@@ -106,6 +106,10 @@ body {
     align-items: center;
 }
 
+.control-btn > i, .control-btn > svg {
+    vertical-align: middle;
+}
+
 .wrldm-logo-header {
     height: 20px; 
     display: block; 
