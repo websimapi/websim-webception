@@ -143,12 +143,20 @@ body {
 .logo-sidebar-wrapper {
     display: inline-flex; 
     align-items: center; 
-    gap: 2px;            
+    gap: 2px; 
+    padding: 2px 8px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: background-color 0.2s ease-in-out; 
+}
+
+.logo-sidebar-wrapper:hover {
+    background-color: #f3f4f6; 
 }
 
 .logo-sidebar-wrapper .logo {
     margin-left: 0; 
-    padding-right: 6px; /* Add some space between logo and toggle button */
+    padding-right: 0; 
 }
 
 .control-btn > i, .control-btn > svg {
