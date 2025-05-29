@@ -153,46 +153,61 @@
         </div>
     </main>
 
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar hidden" id="sidebar">
         <div class="sidebar-header">
-            <h3>Learn WebSim</h3>
-            <div class="sidebar-controls">
-                <button class="sidebar-btn"><i class="fas fa-bell"></i></button>
-                <button class="sidebar-btn"><i class="fas fa-search"></i></button>
-                <button class="sidebar-btn"><i class="fas fa-cog"></i></button>
+            <h3 id="sidebarProjectTitle">Project Title</h3>
+            <div class="sidebar-header-actions">
+                <button class="sidebar-btn-action post-btn">Post</button>
+                <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="sidebar-avatar" id="userAvatarSidebar">
             </div>
         </div>
         
         <div class="sidebar-content">
-            <div class="sidebar-section">
-                <h4>Today</h4>
-                <div class="sidebar-item">
-                    <div class="sidebar-item-image purple"></div>
-                    <div class="sidebar-item-content">
-                        <h5>Digital Cocktail Pairs 5...</h5>
-                        <span class="sidebar-meta">All • Just • Pinned</span>
+            <ul class="sidebar-history-list">
+                <li class="sidebar-history-item">
+                    <span class="history-version-tag">V33</span>
+                    <i class="fas fa-magic history-icon"></i>
+                    <div class="history-item-details">
+                        <span class="history-text">now increase teh font size of the nav bar icons by 2px</span>
+                        <span class="history-meta">0m ago</span>
                     </div>
-                </div>
-                
-                <div class="sidebar-item">
-                    <div class="sidebar-item-image blue"></div>
-                    <div class="sidebar-item-content">
-                        <h5>VoiceScape - AI Voice Cloning for Everyone</h5>
-                        <span class="sidebar-meta">6 minutes ago</span>
+                </li>
+                 <li class="sidebar-history-item">
+                    <span class="history-version-tag">V32</span>
+                    <i class="fas fa-palette history-icon"></i>
+                     <div class="history-item-details">
+                        <span class="history-text">There is to much margin or padding to the left side /start of the nav bar fix this remove some of the what space</span>
+                        <span class="history-meta">32m ago</span>
                     </div>
-                </div>
-                
-                <div class="sidebar-item">
-                    <div class="sidebar-item-image red"></div>
-                    <div class="sidebar-item-content">
-                        <h5> We Love the WebSim Tea </h5>
-                        <span class="sidebar-meta">13 minutes ago</span>
+                </li>
+                <li class="sidebar-history-item">
+                    <span class="history-version-tag">V31</span>
+                    <i class="far fa-heart history-icon"></i>
+                    <div class="history-item-details">
+                        <span class="history-text">Make the bell and heart icon the outline version. On hover over the heart icon have the outline heart change to be red color</span>
+                        <span class="history-meta">1h ago</span>
                     </div>
-                </div>
-            </div>
+                </li>
+                 <li class="sidebar-history-item">
+                    <span class="history-version-tag">V30</span>
+                    <i class="fas fa-mouse-pointer history-icon"></i>
+                    <div class="history-item-details">
+                        <span class="history-text">now increase teh font size of the nav bar icons by 2px</span>
+                         <span class="history-meta">2h ago</span>
+                    </div>
+                </li>
+            </ul>
         </div>
     </aside>
 
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
     <script src="script.js"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>

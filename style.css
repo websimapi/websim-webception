@@ -315,12 +315,16 @@ body {
 .sidebar {
     width: 320px;
     background: white;
-    border-radius: 12px;
-    height: fit-content;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-    position: sticky;
-    top: 100px;
+    border-left: 1px solid #e1e5e9;
+    height: calc(100vh - 73px); 
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: fixed; 
+    top: 73px; 
+    right: 0;
+    z-index: 90; 
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar.hidden {
@@ -330,112 +334,129 @@ body {
 }
 
 .sidebar-header {
-    padding: 20px;
+    padding: 16px 20px;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .sidebar-header h3 {
     color: #111827;
     font-weight: 600;
+    font-size: 16px;
+    margin-right: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.sidebar-controls {
+.sidebar-header-actions {
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
 }
 
-.sidebar-btn {
-    background: none;
+.sidebar-btn-action.post-btn {
+    background-color: #3b82f6;
+    color: white;
     border: none;
-    padding: 6px;
-    color: #6b7280;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    border-radius: 4px;
+    transition: background-color 0.2s;
 }
 
-.sidebar-btn:hover {
-    background: #f3f4f6;
+.sidebar-btn-action.post-btn:hover {
+    background-color: #2563eb;
+}
+
+.sidebar-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .sidebar-content {
-    padding: 20px;
+    padding: 0; 
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
-.sidebar-section h4 {
-    color: #6b7280;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    letter-spacing: 0.5px;
+.sidebar-history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.sidebar-item {
+.sidebar-history-item {
     display: flex;
+    align-items: center;
     gap: 12px;
-    padding: 12px 0;
+    padding: 12px 20px;
     border-bottom: 1px solid #f3f4f6;
     cursor: pointer;
+    font-size: 13px;
 }
 
-.sidebar-item:hover {
-    background: #f8f9fa;
-    margin: 0 -12px;
-    padding: 12px;
-    border-radius: 8px;
+.sidebar-history-item:hover {
+    background-color: #f8f9fa;
 }
 
-.sidebar-item-image {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
+.sidebar-history-item:last-child {
+    border-bottom: none;
+}
+
+.history-version-tag {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
     flex-shrink: 0;
 }
 
-.sidebar-item-image.purple {
-    background: #8b5cf6;
+.history-icon {
+    color: #6b7280;
+    font-size: 16px; 
+    width: 20px; 
+    text-align: center;
+    flex-shrink: 0;
 }
 
-.sidebar-item-image.blue {
-    background: #3b82f6;
+.history-item-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0; 
 }
 
-.sidebar-item-image.red {
-    background: #ef4444;
-}
-
-.sidebar-item-content h5 {
-    font-size: 14px;
+.history-text {
+    color: #374151;
     font-weight: 500;
-    color: #111827;
-    margin-bottom: 4px;
-    line-height: 1.3;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.sidebar-meta {
-    font-size: 12px;
+.history-meta {
+    font-size: 11px;
     color: #6b7280;
 }
 
 @media (max-width: 1200px) {
-    .sidebar {
-        position: fixed;
-        right: 24px;
-        top: 100px;
-        z-index: 50;
-    }
 }
 
 @media (max-width: 768px) {
     .header {
         padding: 8px 12px;
         gap: 8px;
-    }
-    
-    .nav-controls {
     }
     
     .address-bar { 
@@ -483,7 +504,26 @@ body {
     }
     
     .sidebar {
-        width: 280px;
-        right: 16px;
+        width: 280px; 
+        top: 65px; 
+        height: calc(100vh - 65px);
+    }
+    .sidebar-header {
+        padding: 12px 16px;
+    }
+    .sidebar-header h3 {
+        font-size: 15px;
+    }
+    .sidebar-btn-action.post-btn {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    .sidebar-avatar {
+        width: 28px;
+        height: 28px;
+    }
+    .sidebar-history-item {
+        padding: 10px 16px;
+        gap: 10px;
     }
 }

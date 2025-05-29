@@ -1,9 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
+    const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
     
+    const ICONS = {
+        open: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-open"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path><path d="m10 15-3-3 3-3"></path></svg>`,
+        close: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
+    };
+
     sidebarToggle.addEventListener('click', function() {
         sidebar.classList.toggle('hidden');
+        if (sidebar.classList.contains('hidden')) {
+            sidebarToggle.innerHTML = ICONS.open;
+        } else {
+            sidebarToggle.innerHTML = ICONS.close;
+        }
     });
     
     // Handle URL input
@@ -39,22 +50,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Add click handlers for sidebar items
-    const sidebarItems = document.querySelectorAll('.sidebar-item');
-    sidebarItems.forEach(item => {
+    // Add click handlers for sidebar items (now history items)
+    const historyItems = document.querySelectorAll('.sidebar-history-item');
+    historyItems.forEach(item => {
         item.addEventListener('click', function() {
-            const title = item.querySelector('h5').textContent;
-            console.log('Opening sidebar item:', title);
-            // TODO: Implement sidebar item opening
+            const text = item.querySelector('.history-text').textContent;
+            console.log('Opening history item:', text);
+            // TODO: Implement history item opening
         });
     });
 
-    // Function to load user avatars
-    async function loadUserAvatars() {
+    // Function to load user avatars and project info
+    async function loadUserDataAndProjectInfo() {
         try {
             const user = await window.websim.getUser();
+            const project = await window.websim.getCurrentProject();
+
+            if (project && project.title && sidebarProjectTitle) {
+                sidebarProjectTitle.textContent = project.title;
+            } else if (sidebarProjectTitle) {
+                sidebarProjectTitle.textContent = document.title || "Project Details"; // Fallback to page title or generic
+            }
             
             const addressAvatarImg = document.getElementById('userAvatarAddressBar');
+            const sidebarAvatarImg = document.getElementById('userAvatarSidebar');
             
             if (user && user.username) {
                 const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
@@ -64,13 +83,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     addressAvatarImg.src = avatarSrc;
                     addressAvatarImg.alt = avatarAlt;
                 }
+                if (sidebarAvatarImg) {
+                    sidebarAvatarImg.src = avatarSrc;
+                    sidebarAvatarImg.alt = avatarAlt;
+                }
+
             } else {
                 console.warn('WebSim user not found or username is missing. Avatars will use default placeholders.');
+                 // Keep default src if user not found
+                if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
+                if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
             }
         } catch (error) {
-            console.error('Error loading user data for avatars:', error);
+            console.error('Error loading user/project data:', error);
+            if (sidebarProjectTitle) {
+                 sidebarProjectTitle.textContent = document.title || "Project Details";
+            }
         }
     }
 
-    loadUserAvatars();
+    loadUserDataAndProjectInfo();
 });
