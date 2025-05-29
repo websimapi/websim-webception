@@ -55,4 +55,34 @@ document.addEventListener('DOMContentLoaded', function() {
             // TODO: Implement sidebar item opening
         });
     });
+
+    // Function to load user avatars
+    async function loadUserAvatars() {
+        try {
+            const user = await window.websim.getUser();
+            
+            const addressAvatarImg = document.getElementById('userAvatarAddressBar');
+            const headerProfileImg = document.getElementById('userAvatarHeaderProfile');
+
+            if (user && user.username) {
+                const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
+                const avatarAlt = `${user.username}'s avatar`;
+
+                if (addressAvatarImg) {
+                    addressAvatarImg.src = avatarSrc;
+                    addressAvatarImg.alt = avatarAlt;
+                }
+                if (headerProfileImg) {
+                    headerProfileImg.src = avatarSrc;
+                    headerProfileImg.alt = avatarAlt; 
+                }
+            } else {
+                console.warn('WebSim user not found or username is missing. Avatars will use default placeholders.');
+            }
+        } catch (error) {
+            console.error('Error loading user data for avatars:', error);
+        }
+    }
+
+    loadUserAvatars();
 });
