@@ -67,7 +67,7 @@ body {
 
 .address-bar {
     flex-shrink: 1; 
-    width: 75%; 
+    width: 84.375%; 
     max-width: 700px; 
     display: flex;
     align-items: center;
