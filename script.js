@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const addressAvatarImg = document.getElementById('userAvatarAddressBar');
-            const sidebarAvatarImg = document.getElementById('userAvatarSidebar');
-            
+            // const sidebarAvatarImg = document.getElementById('userAvatarSidebar'); // Element no longer exists
+
             if (user && user.username) {
                 const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
                 const avatarAlt = `${user.username}'s avatar`;
@@ -86,16 +86,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     addressAvatarImg.src = avatarSrc;
                     addressAvatarImg.alt = avatarAlt;
                 }
-                if (sidebarAvatarImg) {
-                    sidebarAvatarImg.src = avatarSrc;
-                    sidebarAvatarImg.alt = avatarAlt;
-                }
+                // if (sidebarAvatarImg) { // Logic for sidebar avatar removed
+                //     sidebarAvatarImg.src = avatarSrc;
+                //     sidebarAvatarImg.alt = avatarAlt;
+                // }
 
             } else {
                 console.warn('WebSim user not found or username is missing. Avatars will use default placeholders.');
                  // Keep default src if user not found
                 if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
-                if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
+                // if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar'; // Logic for sidebar avatar removed
             }
         } catch (error) {
             console.error('Error loading user/project data:', error);

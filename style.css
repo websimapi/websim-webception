@@ -356,16 +356,30 @@ body {
     padding: 16px 20px;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Stack main and meta vertically */
     flex-shrink: 0;
+    gap: 4px; /* Space between main and meta */
+}
+
+.sidebar-header-main {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar-project-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px; /* Slighty rounded corners for the icon */
+    margin-right: 10px;
+    object-fit: cover;
 }
 
 .sidebar-header h3 {
     color: #111827;
     font-weight: 600;
     font-size: 16px;
-    margin-right: 16px;
+    flex-grow: 1; /* Allow title to take available space */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -374,7 +388,9 @@ body {
 .sidebar-header-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px; /* Space between Post button and heart icon */
+    margin-left: auto; /* Push actions to the right */
+    flex-shrink: 0; /* Prevent actions from shrinking */
 }
 
 .sidebar-btn-action.post-btn {
@@ -382,7 +398,7 @@ body {
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: 6px 12px; /* Adjusted padding */
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -393,11 +409,81 @@ body {
     background-color: #2563eb;
 }
 
+.sidebar-btn-action.heart-icon-btn {
+    background: none;
+    border: none;
+    color: #374151; /* Default color for the heart icon */
+    font-size: 20px; /* Adjust size as needed */
+    padding: 4px; /* Minimal padding for icon button */
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-btn-action.heart-icon-btn:hover {
+    color: #ef4444; /* Red on hover */
+}
+
+.sidebar-header-meta {
+    display: flex;
+    justify-content: flex-end; /* Align "15m ago" to the right */
+    width: 100%;
+    font-size: 12px;
+    color: #6b7280;
+    padding-right: 5px; /* Align with heart icon roughly */
+}
+
 .sidebar-avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.sidebar-stats {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.stat-item:hover {
+    background-color: #f3f4f6;
+}
+
+.stat-item.active {
+    color: #3b82f6;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 4px; /* Adjust to keep visual alignment */
+    font-weight: 500;
+}
+
+.stat-item.active i {
+    color: #3b82f6;
+}
+
+.stat-value {
+    font-weight: 500;
+}
+
+.stat-item i {
+    font-size: 16px;
 }
 
 .sidebar-content {
