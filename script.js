@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle URL input
     const urlInput = document.querySelector('.url-input');
-    const refreshBtn = document.querySelector('.address-bar .refresh-btn'); // Updated selector for refresh button
+    const refreshBtn = document.querySelector('.refresh-btn'); 
     
     function handleUrlSubmit() {
         const prompt = urlInput.value.trim();
@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    if (refreshBtn) { // Check if refreshBtn exists
+    if (refreshBtn) { 
         refreshBtn.addEventListener('click', handleUrlSubmit);
     }
     
     urlInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent form submission if it's inside a form
+            e.preventDefault(); 
             handleUrlSubmit();
         }
     });

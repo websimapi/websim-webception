@@ -27,7 +27,7 @@ body {
     gap: 4px; 
 }
 
-.nav-btn, .control-btn, .sidebar-toggle, .address-bar-btn {
+.nav-btn, .control-btn, .sidebar-toggle {
     background: none;
     border: none;
     border-radius: 50%; 
@@ -41,7 +41,7 @@ body {
     font-size: 16px; 
 }
 
-.nav-btn:hover, .control-btn:hover, .sidebar-toggle:hover, .address-bar-btn:hover {
+.nav-btn:hover, .control-btn:hover, .sidebar-toggle:hover {
     background: #f3f4f6;
     color: #374151;
 }
@@ -79,11 +79,6 @@ body {
 
 .url-input::placeholder {
     color: #6b7280; 
-}
-
-.address-bar-btn {
-    padding: 6px; 
-    font-size: 14px; 
 }
 
 .header-controls {
