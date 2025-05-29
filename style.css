@@ -42,6 +42,10 @@ body {
     font-size: 16px; 
 }
 
+.nav-btn.heart-btn:hover i {
+    color: red;
+}
+
 .nav-btn:hover, .control-btn:hover, .sidebar-toggle:hover {
     background: #f3f4f6;
     color: #374151;
