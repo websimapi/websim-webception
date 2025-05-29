@@ -113,7 +113,10 @@ body {
 .logo-sidebar-wrapper {
     display: inline-flex; 
     align-items: center; 
-    padding: 4px;        
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    padding-left: 2px;       
     border-radius: 20px; 
     transition: background-color 0.2s ease-in-out;
     gap: 2px;            
