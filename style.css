@@ -58,7 +58,9 @@ body {
 }
 
 .address-bar {
-    flex: 1;
+    flex-grow: 3;
+    flex-shrink: 1;
+    flex-basis: 0%;
     display: flex;
     align-items: center;
     background: #f0f2f5; 
@@ -66,6 +68,13 @@ body {
     border-radius: 20px; 
     padding: 6px 12px; 
     gap: 8px;
+    min-width: 0;
+}
+
+.address-bar-spacer {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
 }
 
 .address-bar-avatar {
