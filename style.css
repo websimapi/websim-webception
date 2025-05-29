@@ -393,22 +393,6 @@ body {
     color: #6b7280;
 }
 
-.sidebar-toggle:hover {
-    background: #f3f4f6;
-    color: #374151;
-}
-
-.sidebar-toggle .open-icon {
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-}
-
-.sidebar-toggle .close-icon {
-    font-size: 16px;
-    vertical-align: middle;
-}
-
 @media (max-width: 1200px) {
     .sidebar {
         position: fixed;
@@ -456,15 +440,6 @@ body {
     
     .control-btn, .sidebar-toggle, .nav-btn {
         padding: 6px; 
-        font-size: 14px;
-    }
-
-    .sidebar-toggle .open-icon {
-        width: 14px;
-        height: 14px;
-    }
-
-    .sidebar-toggle .close-icon {
         font-size: 14px;
     }
     

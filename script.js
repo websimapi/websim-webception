@@ -1,29 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
-    const openIcon = sidebarToggle.querySelector('.open-icon');
-    const closeIcon = sidebarToggle.querySelector('.close-icon');
     
-    function updateSidebarToggleIcons() {
-        if (sidebar.classList.contains('hidden')) {
-            openIcon.style.display = 'inline-block';
-            closeIcon.style.display = 'none';
-            sidebarToggle.setAttribute('aria-label', 'Open sidebar');
-            sidebarToggle.setAttribute('title', 'Open sidebar');
-        } else {
-            openIcon.style.display = 'none';
-            closeIcon.style.display = 'inline-block';
-            sidebarToggle.setAttribute('aria-label', 'Close sidebar');
-            sidebarToggle.setAttribute('title', 'Close sidebar');
-        }
-    }
-
-    // Set initial state of icons and ARIA attributes
-    updateSidebarToggleIcons();
-
     sidebarToggle.addEventListener('click', function() {
         sidebar.classList.toggle('hidden');
-        updateSidebarToggleIcons();
     });
     
     // Handle URL input
