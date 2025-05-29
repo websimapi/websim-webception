@@ -1,24 +1,36 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
     const sidebar = document.getElementById('sidebar');
+    const mainHeaderLogo = document.getElementById('mainHeaderLogo');
     const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
-    // const pageContainer = document.getElementById('pageContainer'); // No longer needed for sidebar toggle logic
 
     const ICONS = {
         open: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-open"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path><path d="m10 15-3-3 3-3"></path></svg>`,
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
     };
 
-    sidebarToggle.addEventListener('click', function() {
-        sidebar.classList.toggle('hidden');
-        // pageContainer.classList.toggle('sidebar-is-open'); // This line is removed
+    // Set initial icons
+    sidebarToggle.innerHTML = ICONS.open;
+    if (sidebarCloseBtn) { // Check if element exists before setting innerHTML
+        sidebarCloseBtn.innerHTML = ICONS.close;
+    }
 
-        if (sidebar.classList.contains('hidden')) {
-            sidebarToggle.innerHTML = ICONS.open;
-        } else {
-            sidebarToggle.innerHTML = ICONS.close;
+    sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.remove('hidden');
+        if (mainHeaderLogo) {
+            mainHeaderLogo.classList.add('hidden');
         }
     });
+    
+    if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener('click', function() {
+            sidebar.classList.add('hidden');
+            if (mainHeaderLogo) {
+                mainHeaderLogo.classList.remove('hidden');
+            }
+        });
+    }
     
     // Handle URL input
     const urlInput = document.querySelector('.url-input');

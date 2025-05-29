@@ -32,7 +32,7 @@
                 <button class="control-btn"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="nav-divider"></div>
                 <div class="logo-sidebar-wrapper">
-                    <div class="logo">
+                    <div class="logo" id="mainHeaderLogo">
                         <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
                     </div>
                     <button class="sidebar-toggle" id="sidebarToggle">
@@ -156,6 +156,17 @@
     </div>
 
     <aside class="sidebar hidden" id="sidebar">
+        <div class="sidebar-top-nav">
+            <button class="nav-btn" id="sidebarCloseBtn">
+                <!-- SVG for X icon will be inserted by JS -->
+            </button>
+            <div class="logo sidebar-logo">
+                <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+            </div>
+            <div class="sidebar-top-nav-actions-placeholder">
+                <!-- Empty for now, for layout balance -->
+            </div>
+        </div>
         <div class="sidebar-header">
             <div class="sidebar-header-main">
                 <img src="/a/a27bc614-f9ec-448b-8835-91c2a3b5612c" alt="User Avatar" class="sidebar-project-icon" id="sidebarUserAvatarIcon">

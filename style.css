@@ -7,6 +7,7 @@
 :root {
   --header-height: 73px; /* Default for desktop */
   --sidebar-width: 320px; /* Sidebar width */
+  --sidebar-button-size: 36px; /* approx size of .nav-btn with padding */
 }
 
 body {
@@ -36,6 +37,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    height: var(--header-height); /* Ensure header has a fixed height */
 }
 
 .nav-controls {
@@ -56,6 +58,8 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 18px; 
+    width: var(--sidebar-button-size); /* Added for consistent sizing */
+    height: var(--sidebar-button-size); /* Added for consistent sizing */
 }
 
 .nav-btn.heart-btn:hover i {
@@ -65,6 +69,14 @@ body {
 .nav-btn:hover, .control-btn:hover, .sidebar-toggle:hover {
     background: #f3f4f6;
     color: #374151;
+}
+
+#sidebarCloseBtn {
+    background-color: #f3f4f6; /* Light grey background like active/hover */
+    color: #374151;
+}
+#sidebarCloseBtn:hover {
+    background-color: #e5e7eb; /* Slightly darker on hover */
 }
 
 .diamond-btn {
@@ -133,24 +145,12 @@ body {
 .logo-sidebar-wrapper {
     display: inline-flex; 
     align-items: center; 
-    padding: 4px;        
-    border-radius: 20px; 
-    transition: background-color 0.2s ease-in-out;
     gap: 2px;            
-}
-
-.logo-sidebar-wrapper:hover {
-    background-color: #f3f4f6; 
-    cursor: pointer;
 }
 
 .logo-sidebar-wrapper .logo {
     margin-left: 0; 
-}
-
-.logo-sidebar-wrapper:hover .sidebar-toggle {
-    background-color: transparent; 
-    color: #374151; 
+    padding-right: 6px; /* Add some space between logo and toggle button */
 }
 
 .control-btn > i, .control-btn > svg {
@@ -205,6 +205,10 @@ body {
 .logo span:nth-child(6) {
     color: #ea4335;
     transform: rotate(5deg) translateY(-0.2rem);
+}
+
+.logo.hidden { /* Utility class to hide main header logo */
+    display: none !important;
 }
 
 .header-profile-img {
@@ -350,6 +354,27 @@ body {
 .sidebar:not(.hidden) { /* When sidebar is open (hidden class is NOT present) */
     width: var(--sidebar-width); /* Slide into view by setting width */
     border-left-width: 1px; /* Show border */
+}
+
+.sidebar-top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 8px 8px 8px; /* Match header padding, adjust left for button */
+    border-bottom: 1px solid #e1e5e9;
+    height: var(--header-height); /* Match main header height */
+    flex-shrink: 0;
+}
+
+.sidebar-top-nav .logo {
+    flex-grow: 1; /* Allow logo to take space */
+    text-align: center; /* Center the logo text if it expands */
+}
+
+.sidebar-top-nav-actions-placeholder {
+    width: var(--sidebar-button-size); /* Match button size for balance */
+    height: var(--sidebar-button-size); /* Match button size */
+    flex-shrink: 0;
 }
 
 .sidebar-header {
