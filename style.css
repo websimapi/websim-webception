@@ -25,6 +25,7 @@ body {
 .nav-controls {
     display: flex;
     gap: 4px; 
+    align-items: center; 
 }
 
 .nav-btn, .control-btn, .sidebar-toggle {
@@ -48,10 +49,9 @@ body {
 
 .nav-divider {
     width: 1px;
-    height: 20px; 
+    height: 16px; 
     background-color: #d1d5db; 
     margin: 0 4px; 
-    align-self: center; 
 }
 
 .go-btn { 
