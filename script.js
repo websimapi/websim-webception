@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     sidebarToggle.addEventListener('click', function() {
         sidebar.classList.toggle('hidden');
         
-        // Update icon based on sidebar state
         const icon = sidebarToggle.querySelector('i');
         if (sidebar.classList.contains('hidden')) {
             icon.className = 'fas fa-bars';
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle URL input
     const urlInput = document.querySelector('.url-input');
-    const goBtn = document.querySelector('.go-btn');
+    const refreshBtn = document.querySelector('.address-bar .refresh-btn'); // Updated selector for refresh button
     
     function handleUrlSubmit() {
         const prompt = urlInput.value.trim();
@@ -26,10 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    goBtn.addEventListener('click', handleUrlSubmit);
+    if (refreshBtn) { // Check if refreshBtn exists
+        refreshBtn.addEventListener('click', handleUrlSubmit);
+    }
     
     urlInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission if it's inside a form
             handleUrlSubmit();
         }
     });
@@ -54,4 +56,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
