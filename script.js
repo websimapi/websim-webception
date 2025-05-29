@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const addressAvatarImg = document.getElementById('userAvatarAddressBar');
-            // const sidebarAvatarImg = document.getElementById('userAvatarSidebar'); // Element no longer exists
+            const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon'); 
 
             if (user && user.username) {
                 const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
@@ -86,21 +86,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     addressAvatarImg.src = avatarSrc;
                     addressAvatarImg.alt = avatarAlt;
                 }
-                // if (sidebarAvatarImg) { // Logic for sidebar avatar removed
-                //     sidebarAvatarImg.src = avatarSrc;
-                //     sidebarAvatarImg.alt = avatarAlt;
-                // }
+                if (sidebarAvatarImg) { 
+                    sidebarAvatarImg.src = avatarSrc;
+                    sidebarAvatarImg.alt = avatarAlt;
+                }
 
             } else {
                 console.warn('WebSim user not found or username is missing. Avatars will use default placeholders.');
                  // Keep default src if user not found
                 if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
-                // if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar'; // Logic for sidebar avatar removed
+                if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar'; 
             }
         } catch (error) {
             console.error('Error loading user/project data:', error);
             if (sidebarProjectTitle) {
                  sidebarProjectTitle.textContent = document.title || "Project Details";
+            }
+            // Ensure alt text is set even on error for sidebar avatar
+            const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
+            if (sidebarAvatarImg) {
+                sidebarAvatarImg.alt = 'User Avatar';
             }
         }
     }
