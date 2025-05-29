@@ -14,16 +14,16 @@ body {
     background: #f8f9fa;
     color: #333;
     overflow-x: hidden; /* Prevent horizontal scroll during transitions */
+    display: flex; /* ADDED: Make body a flex container */
+    flex-direction: row; /* ADDED: Align children (page-container, sidebar) in a row */
 }
 
 .page-container { /* New wrapper for header and main content */
-    width: 100%;
-    transition: margin-right 0.3s ease-in-out;
+    /* width: 100%; REMOVED: flex-grow will manage width */
+    /* transition: margin-right 0.3s ease-in-out; REMOVED: Not using margin for push anymore */
     position: relative; /* Ensures proper stacking and context for sticky header */
-}
-
-.page-container.sidebar-is-open { /* State when sidebar is open */
-    margin-right: var(--sidebar-width);
+    flex-grow: 1; /* ADDED: page-container will take available space */
+    min-width: 0; /* ADDED: Allows page-container to shrink properly */
 }
 
 .header {
@@ -333,28 +333,23 @@ body {
 }
 
 .sidebar {
-    width: var(--sidebar-width); 
     background: white;
     border-left: 1px solid #e1e5e9;
     height: 100vh; /* Full viewport height */
     box-shadow: -2px 0 5px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease-in-out; /* Transition transform for sliding */
     display: flex;
     flex-direction: column;
-    overflow-y: auto; 
-    position: fixed; /* Fixed position on the right */
-    top: 0;
-    right: 0;
-    transform: translateX(100%); /* Start hidden (slid off screen) */
-    z-index: 200; /* Ensure it's above other content if needed, page-container manages push */
+    overflow-y: auto; /* For vertical scroll within sidebar */
+    width: 0; /* Default state: hidden */
+    border-left-width: 0; /* Start with 0 width for border when hidden */
+    transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
+    overflow-x: hidden; /* Hide content during width transition */
+    flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
 }
 
-.sidebar:not(.hidden) { /* When sidebar is not hidden (i.e., open) */
-    transform: translateX(0); /* Slide into view */
-}
-
-.sidebar.hidden {
-    transform: translateX(100%); /* Explicitly hidden */
+.sidebar:not(.hidden) { /* When sidebar is open (hidden class is NOT present) */
+    width: var(--sidebar-width); /* Slide into view by setting width */
+    border-left-width: 1px; /* Show border */
 }
 
 .sidebar-header {
