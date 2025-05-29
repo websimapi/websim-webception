@@ -4,10 +4,15 @@
     box-sizing: border-box;
 }
 
+:root {
+  --header-height: 73px; /* Default for desktop */
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #f8f9fa;
     color: #333;
+    overflow-x: hidden; /* Prevent horizontal scroll during transitions */
 }
 
 .header {
@@ -199,12 +204,19 @@ body {
     cursor: pointer;
 }
 
-.main-content {
+.content-area {
     display: flex;
-    max-width: 1400px;
-    margin: 0 auto;
+    position: relative; /* Ensures stacking context if needed, or just for structure */
+}
+
+.main-content {
+    flex: 1 1 auto; /* Allow main content to grow and shrink */
+    min-width: 0; /* Important for flex shrinking */
+    max-width: 1400px; /* Keep existing max-width for content area */
     padding: 24px;
-    gap: 24px;
+    height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+    transition: margin-right 0.3s ease-in-out; /* In case an alternative push is desired, but flex width change is primary */
 }
 
 .content-grid {
@@ -313,24 +325,25 @@ body {
 }
 
 .sidebar {
-    width: 320px;
+    width: 320px; /* Width when open */
     background: white;
     border-left: 1px solid #e1e5e9;
-    height: calc(100vh - 73px); 
+    height: calc(100vh - var(--header-height)); 
     box-shadow: -2px 0 5px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    position: fixed; 
-    top: 73px; 
-    right: 0;
-    z-index: 90; 
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out, border-width 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    overflow-x: hidden; /* Hide content overflowing horizontally during transition */
+    overflow-y: auto; /* Allow sidebar content to scroll */
 }
 
 .sidebar.hidden {
-    transform: translateX(100%);
-    opacity: 0;
-    pointer-events: none;
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-left-width: 0;
+    box-shadow: none;
 }
 
 .sidebar-header {
@@ -384,7 +397,7 @@ body {
 .sidebar-content {
     padding: 0; 
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: auto; /* Already here, good for internal scroll */
 }
 
 .sidebar-history-list {
@@ -450,10 +463,11 @@ body {
     color: #6b7280;
 }
 
-@media (max-width: 1200px) {
-}
-
 @media (max-width: 768px) {
+    :root {
+        --header-height: 65px; /* For mobile */
+    }
+
     .header {
         padding: 8px 12px;
         gap: 8px;
@@ -504,9 +518,7 @@ body {
     }
     
     .sidebar {
-        width: 280px; 
-        top: 65px; 
-        height: calc(100vh - 65px);
+        width: 280px; /* Sidebar width when open on mobile */
     }
     .sidebar-header {
         padding: 12px 16px;
