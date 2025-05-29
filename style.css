@@ -362,6 +362,18 @@ body {
     border-left-width: 1px; /* Show border */
 }
 
+#sidebarInternalControls {
+    /* Inherits .logo-sidebar-wrapper styles */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease-in-out; /* Adjust timing as needed, can match sidebar width transition */
+}
+
+.sidebar:not(.hidden) #sidebarInternalControls {
+    opacity: 1;
+    visibility: visible;
+}
+
 .sidebar-top-nav {
     display: flex;
     align-items: center;

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainHeaderLogoWrapper = document.getElementById('mainHeaderLogoWrapper'); // Wrapper in main header for logo + toggle
 
     const sidebar = document.getElementById('sidebar');
-    const sidebarInternalControls = document.getElementById('sidebarInternalControls'); // Wrapper in sidebar top nav
     const sidebarInternalCloseBtn = document.getElementById('sidebarInternalCloseBtn'); // Button in sidebar top nav
 
     const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
@@ -27,12 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 mainHeaderLogoWrapper.style.display = 'none'; // Hide the logo and toggle button in the main header
             }
 
-            if (sidebarInternalControls) {
-                sidebarInternalControls.style.display = 'inline-flex'; // Show the logo and toggle button in the sidebar's top nav
-                if (sidebarInternalCloseBtn) {
-                    // Per prompt, this button (for closing) will use the "panel open" icon
-                    sidebarInternalCloseBtn.innerHTML = ICONS.open;
-                }
+            if (sidebarInternalCloseBtn) {
+                // Per prompt, this button (for closing) will use the "panel open" icon
+                sidebarInternalCloseBtn.innerHTML = ICONS.open;
             }
         });
     }
@@ -42,15 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebarInternalCloseBtn.addEventListener('click', function() {
             sidebar.classList.add('hidden'); // Hide the sidebar
 
-            if (sidebarInternalControls) {
-                sidebarInternalControls.style.display = 'none'; // Hide the logo and toggle button in the sidebar's top nav
-            }
-
             if (mainHeaderLogoWrapper) {
                 mainHeaderLogoWrapper.style.display = 'inline-flex'; // Show the logo and toggle button back in the main header
             }
-            // The sidebarToggle button in mainHeaderLogoWrapper will inherently show ICONS.open
-            // as its content was never changed from the initial setup.
         });
     }
     
