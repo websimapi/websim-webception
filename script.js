@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarToggle = document.getElementById('sidebarToggle'); // Button in main header
+    const mainHeaderLogoWrapper = document.getElementById('mainHeaderLogoWrapper'); // Wrapper in main header for logo + toggle
+
     const sidebar = document.getElementById('sidebar');
-    const mainHeaderLogo = document.getElementById('mainHeaderLogo');
+    const sidebarInternalControls = document.getElementById('sidebarInternalControls'); // Wrapper in sidebar top nav
+    const sidebarInternalCloseBtn = document.getElementById('sidebarInternalCloseBtn'); // Button in sidebar top nav
+
     const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
 
     const ICONS = {
@@ -10,25 +13,44 @@ document.addEventListener('DOMContentLoaded', function() {
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
     };
 
-    // Set initial icons
-    sidebarToggle.innerHTML = ICONS.open;
-    if (sidebarCloseBtn) { // Check if element exists before setting innerHTML
-        sidebarCloseBtn.innerHTML = ICONS.close;
+    // Set initial icon for the main header toggle button
+    if (sidebarToggle) {
+        sidebarToggle.innerHTML = ICONS.open;
     }
 
-    sidebarToggle.addEventListener('click', function() {
-        sidebar.classList.remove('hidden');
-        if (mainHeaderLogo) {
-            mainHeaderLogo.classList.add('hidden');
-        }
-    });
-    
-    if (sidebarCloseBtn) {
-        sidebarCloseBtn.addEventListener('click', function() {
-            sidebar.classList.add('hidden');
-            if (mainHeaderLogo) {
-                mainHeaderLogo.classList.remove('hidden');
+    // Event listener for the main header toggle button (to open sidebar)
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.remove('hidden'); // Show the sidebar
+
+            if (mainHeaderLogoWrapper) {
+                mainHeaderLogoWrapper.style.display = 'none'; // Hide the logo and toggle button in the main header
             }
+
+            if (sidebarInternalControls) {
+                sidebarInternalControls.style.display = 'inline-flex'; // Show the logo and toggle button in the sidebar's top nav
+                if (sidebarInternalCloseBtn) {
+                    // Per prompt, this button (for closing) will use the "panel open" icon
+                    sidebarInternalCloseBtn.innerHTML = ICONS.open;
+                }
+            }
+        });
+    }
+    
+    // Event listener for the sidebar's internal close button (now using the "open" icon)
+    if (sidebarInternalCloseBtn) {
+        sidebarInternalCloseBtn.addEventListener('click', function() {
+            sidebar.classList.add('hidden'); // Hide the sidebar
+
+            if (sidebarInternalControls) {
+                sidebarInternalControls.style.display = 'none'; // Hide the logo and toggle button in the sidebar's top nav
+            }
+
+            if (mainHeaderLogoWrapper) {
+                mainHeaderLogoWrapper.style.display = 'inline-flex'; // Show the logo and toggle button back in the main header
+            }
+            // The sidebarToggle button in mainHeaderLogoWrapper will inherently show ICONS.open
+            // as its content was never changed from the initial setup.
         });
     }
     
