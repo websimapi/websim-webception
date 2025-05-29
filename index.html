@@ -8,44 +8,44 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <header class="header">
-        <div class="nav-controls">
-            <button class="nav-btn"><i class="fas fa-home"></i></button>
-            <button class="nav-btn"><i class="far fa-bell"></i></button>
-            <button class="nav-btn heart-btn"><i class="far fa-heart"></i></button>
-            <div class="nav-divider"></div>
-            <button class="nav-btn"><i class="fas fa-plus"></i></button>
-            <button class="nav-btn refresh-btn"><i class="fas fa-sync-alt"></i></button>
-        </div>
-        
-        <div class="address-bar-container">
-            <div class="address-bar">
-                <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="address-bar-avatar" id="userAvatarAddressBar">
-                <input type="text" placeholder="What would you like to change?" class="url-input">
+    <div class="page-container" id="pageContainer">
+        <header class="header">
+            <div class="nav-controls">
+                <button class="nav-btn"><i class="fas fa-home"></i></button>
+                <button class="nav-btn"><i class="far fa-bell"></i></button>
+                <button class="nav-btn heart-btn"><i class="far fa-heart"></i></button>
+                <div class="nav-divider"></div>
+                <button class="nav-btn"><i class="fas fa-plus"></i></button>
+                <button class="nav-btn refresh-btn"><i class="fas fa-sync-alt"></i></button>
             </div>
-        </div>
-        
-        <div class="header-controls">
-            <button class="control-btn"><i class="fas fa-external-link-alt"></i></button>
-            <button class="control-btn diamond-btn">♦</button>
-            <button class="control-btn"><i class="fas fa-ellipsis-v"></i></button>
-            <div class="nav-divider"></div>
-            <div class="logo-sidebar-wrapper">
-                <div class="logo">
-                    <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+            
+            <div class="address-bar-container">
+                <div class="address-bar">
+                    <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="address-bar-avatar" id="userAvatarAddressBar">
+                    <input type="text" placeholder="What would you like to change?" class="url-input">
                 </div>
-                <button class="sidebar-toggle" id="sidebarToggle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-open">
-                        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                        <path d="M15 3v18"></path>
-                        <path d="m10 15-3-3 3-3"></path>
-                    </svg>
-                </button>
             </div>
-        </div>
-    </header>
+            
+            <div class="header-controls">
+                <button class="control-btn"><i class="fas fa-external-link-alt"></i></button>
+                <button class="control-btn diamond-btn">♦</button>
+                <button class="control-btn"><i class="fas fa-ellipsis-v"></i></button>
+                <div class="nav-divider"></div>
+                <div class="logo-sidebar-wrapper">
+                    <div class="logo">
+                        <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+                    </div>
+                    <button class="sidebar-toggle" id="sidebarToggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-open">
+                            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                            <path d="M15 3v18"></path>
+                            <path d="m10 15-3-3 3-3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
 
-    <div class="content-area">
         <main class="main-content">
             <div class="content-grid">
                 <div class="sim-card">
@@ -153,54 +153,54 @@
                 </div>
             </div>
         </main>
-
-        <aside class="sidebar hidden" id="sidebar">
-            <div class="sidebar-header">
-                <h3 id="sidebarProjectTitle">Project Title</h3>
-                <div class="sidebar-header-actions">
-                    <button class="sidebar-btn-action post-btn">Post</button>
-                    <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="sidebar-avatar" id="userAvatarSidebar">
-                </div>
-            </div>
-            
-            <div class="sidebar-content">
-                <ul class="sidebar-history-list">
-                    <li class="sidebar-history-item">
-                        <span class="history-version-tag">V33</span>
-                        <i class="fas fa-magic history-icon"></i>
-                        <div class="history-item-details">
-                            <span class="history-text">now increase teh font size of the nav bar icons by 2px</span>
-                            <span class="history-meta">0m ago</span>
-                        </div>
-                    </li>
-                     <li class="sidebar-history-item">
-                        <span class="history-version-tag">V32</span>
-                        <i class="fas fa-palette history-icon"></i>
-                         <div class="history-item-details">
-                            <span class="history-text">There is to much margin or padding to the left side /start of the nav bar fix this remove some of the what space</span>
-                            <span class="history-meta">32m ago</span>
-                        </div>
-                    </li>
-                    <li class="sidebar-history-item">
-                        <span class="history-version-tag">V31</span>
-                        <i class="far fa-heart history-icon"></i>
-                        <div class="history-item-details">
-                            <span class="history-text">Make the bell and heart icon the outline version. On hover over the heart icon have the outline heart change to be red color</span>
-                            <span class="history-meta">1h ago</span>
-                        </div>
-                    </li>
-                     <li class="sidebar-history-item">
-                        <span class="history-version-tag">V30</span>
-                        <i class="fas fa-mouse-pointer history-icon"></i>
-                        <div class="history-item-details">
-                            <span class="history-text">now increase teh font size of the nav bar icons by 2px</span>
-                             <span class="history-meta">2h ago</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </aside>
     </div>
+
+    <aside class="sidebar hidden" id="sidebar">
+        <div class="sidebar-header">
+            <h3 id="sidebarProjectTitle">Project Title</h3>
+            <div class="sidebar-header-actions">
+                <button class="sidebar-btn-action post-btn">Post</button>
+                <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="sidebar-avatar" id="userAvatarSidebar">
+            </div>
+        </div>
+        
+        <div class="sidebar-content">
+            <ul class="sidebar-history-list">
+                <li class="sidebar-history-item">
+                    <span class="history-version-tag">V33</span>
+                    <i class="fas fa-magic history-icon"></i>
+                    <div class="history-item-details">
+                        <span class="history-text">now increase teh font size of the nav bar icons by 2px</span>
+                        <span class="history-meta">0m ago</span>
+                    </div>
+                </li>
+                 <li class="sidebar-history-item">
+                    <span class="history-version-tag">V32</span>
+                    <i class="fas fa-palette history-icon"></i>
+                     <div class="history-item-details">
+                        <span class="history-text">There is to much margin or padding to the left side /start of the nav bar fix this remove some of the what space</span>
+                        <span class="history-meta">32m ago</span>
+                    </div>
+                </li>
+                <li class="sidebar-history-item">
+                    <span class="history-version-tag">V31</span>
+                    <i class="far fa-heart history-icon"></i>
+                    <div class="history-item-details">
+                        <span class="history-text">Make the bell and heart icon the outline version. On hover over the heart icon have the outline heart change to be red color</span>
+                        <span class="history-meta">1h ago</span>
+                    </div>
+                </li>
+                 <li class="sidebar-history-item">
+                    <span class="history-version-tag">V30</span>
+                    <i class="fas fa-mouse-pointer history-icon"></i>
+                    <div class="history-item-details">
+                        <span class="history-text">now increase teh font size of the nav bar icons by 2px</span>
+                         <span class="history-meta">2h ago</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </aside>
 
     <script type="importmap">
     {

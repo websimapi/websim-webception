@@ -6,6 +6,7 @@
 
 :root {
   --header-height: 73px; /* Default for desktop */
+  --sidebar-width: 320px; /* Sidebar width */
 }
 
 body {
@@ -13,6 +14,16 @@ body {
     background: #f8f9fa;
     color: #333;
     overflow-x: hidden; /* Prevent horizontal scroll during transitions */
+}
+
+.page-container { /* New wrapper for header and main content */
+    width: 100%;
+    transition: margin-right 0.3s ease-in-out;
+    position: relative; /* Ensures proper stacking and context for sticky header */
+}
+
+.page-container.sidebar-is-open { /* State when sidebar is open */
+    margin-right: var(--sidebar-width);
 }
 
 .header {
@@ -25,7 +36,6 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    width: 100%; /* Ensure header spans full viewport width */
 }
 
 .nav-controls {
@@ -205,15 +215,13 @@ body {
     cursor: pointer;
 }
 
-.content-area {
-    display: flex;
-    position: relative; /* Ensures stacking context if needed, or just for structure */
+.content-area { 
 }
 
 .main-content {
-    flex: 1 1 auto; /* Allow main content to grow and shrink */
-    min-width: 0; /* Important for flex shrinking */
-    max-width: 1400px; /* Keep existing max-width for content area */
+    flex: 1 1 auto; 
+    min-width: 0; 
+    max-width: 1400px; 
     padding: 24px;
     height: calc(100vh - var(--header-height));
     overflow-y: auto;
@@ -325,25 +333,28 @@ body {
 }
 
 .sidebar {
-    width: 320px; /* Width when open */
+    width: var(--sidebar-width); 
     background: white;
     border-left: 1px solid #e1e5e9;
-    height: calc(100vh - var(--header-height)); 
+    height: 100vh; /* Full viewport height */
     box-shadow: -2px 0 5px rgba(0,0,0,0.05);
-    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out, border-width 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out; /* Transition transform for sliding */
     display: flex;
     flex-direction: column;
-    flex-shrink: 0; /* Prevent sidebar from shrinking */
-    overflow-x: hidden; /* Hide content overflowing horizontally during transition */
-    overflow-y: auto; /* Allow sidebar content to scroll */
+    overflow-y: auto; 
+    position: fixed; /* Fixed position on the right */
+    top: 0;
+    right: 0;
+    transform: translateX(100%); /* Start hidden (slid off screen) */
+    z-index: 200; /* Ensure it's above other content if needed, page-container manages push */
+}
+
+.sidebar:not(.hidden) { /* When sidebar is not hidden (i.e., open) */
+    transform: translateX(0); /* Slide into view */
 }
 
 .sidebar.hidden {
-    width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    border-left-width: 0;
-    box-shadow: none;
+    transform: translateX(100%); /* Explicitly hidden */
 }
 
 .sidebar-header {
@@ -466,6 +477,7 @@ body {
 @media (max-width: 768px) {
     :root {
         --header-height: 65px; /* For mobile */
+        --sidebar-width: 280px; /* Sidebar width for mobile */
     }
 
     .header {
@@ -518,7 +530,7 @@ body {
     }
     
     .sidebar {
-        width: 280px; /* Sidebar width when open on mobile */
+        /* width: 280px; */
     }
     .sidebar-header {
         padding: 12px 16px;
