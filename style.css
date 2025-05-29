@@ -47,6 +47,10 @@ body {
     color: #374151;
 }
 
+.diamond-btn {
+    font-size: 18px;
+}
+
 .nav-divider {
     width: 1px;
     height: 16px; 
