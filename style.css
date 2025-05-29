@@ -110,6 +110,29 @@ body {
     align-items: center;
 }
 
+.logo-sidebar-wrapper {
+    display: inline-flex; 
+    align-items: center; 
+    padding: 4px;        
+    border-radius: 20px; 
+    transition: background-color 0.2s ease-in-out;
+    gap: 2px;            
+}
+
+.logo-sidebar-wrapper:hover {
+    background-color: #f3f4f6; 
+    cursor: pointer;
+}
+
+.logo-sidebar-wrapper .logo {
+    margin-left: 0; 
+}
+
+.logo-sidebar-wrapper:hover .sidebar-toggle {
+    background-color: transparent; 
+    color: #374151; 
+}
+
 .control-btn > i, .control-btn > svg {
     vertical-align: middle;
 }
