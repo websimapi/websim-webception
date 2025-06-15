@@ -97,6 +97,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Sidebar project description handler
+    const descriptionP = document.getElementById('sidebarProjectDescription');
+    const descriptionTextarea = document.getElementById('sidebarProjectDescriptionInput');
+
+    if (descriptionP && descriptionTextarea) {
+        descriptionP.classList.add('is-placeholder');
+
+        descriptionP.addEventListener('click', () => {
+            descriptionP.style.display = 'none';
+            descriptionTextarea.style.display = 'block';
+            
+            const fullText = descriptionP.dataset.fullText;
+            descriptionTextarea.value = fullText || '';
+            descriptionTextarea.focus();
+            
+            descriptionTextarea.style.height = 'auto';
+            descriptionTextarea.style.height = (descriptionTextarea.scrollHeight) + 'px';
+        });
+
+        descriptionTextarea.addEventListener('blur', () => {
+            const newText = descriptionTextarea.value.trim();
+            
+            descriptionTextarea.style.display = 'none';
+            descriptionP.style.display = 'block';
+
+            if (newText === '') {
+                descriptionP.textContent = 'Add a description...';
+                descriptionP.classList.add('is-placeholder');
+                delete descriptionP.dataset.fullText;
+            } else {
+                descriptionP.dataset.fullText = newText;
+                descriptionP.classList.remove('is-placeholder');
+                
+                if (newText.length > 100) {
+                    descriptionP.textContent = newText.substring(0, 100) + '...';
+                } else {
+                    descriptionP.textContent = newText;
+                }
+            }
+        });
+
+        descriptionTextarea.addEventListener('input', () => {
+            descriptionTextarea.style.height = 'auto';
+            descriptionTextarea.style.height = (descriptionTextarea.scrollHeight) + 'px';
+
+            if (descriptionTextarea.value.length > descriptionTextarea.maxLength) {
+                descriptionTextarea.value = descriptionTextarea.value.slice(0, descriptionTextarea.maxLength);
+            }
+        });
+    }
+
     // Function to load user avatars and project info
     async function loadUserDataAndProjectInfo() {
         try {
