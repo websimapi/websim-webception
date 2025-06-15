@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const sidebarInternalControls = document.getElementById('sidebarInternalControls'); // Wrapper in sidebar top nav
     const sidebarInternalCloseBtn = document.getElementById('sidebarInternalCloseBtn'); // Button in sidebar top nav
-    const mainHeaderControlsDivider = document.getElementById('mainHeaderControlsDivider'); // The divider to hide/show
 
     const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
 
@@ -26,9 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (mainHeaderLogoWrapper) {
                 mainHeaderLogoWrapper.style.display = 'none'; // Hide the logo and toggle button in the main header
-            }
-            if (mainHeaderControlsDivider) {
-                mainHeaderControlsDivider.style.display = 'none'; // Hide the divider
             }
 
             if (sidebarInternalControls) {
@@ -52,9 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (mainHeaderLogoWrapper) {
                 mainHeaderLogoWrapper.style.display = 'inline-flex'; // Show the logo and toggle button back in the main header
-            }
-            if (mainHeaderControlsDivider) {
-                mainHeaderControlsDivider.style.display = ''; // Show the divider (revert to CSS default)
             }
             // The sidebarToggle button in mainHeaderLogoWrapper will inherently show ICONS.open
             // as its content was never changed from the initial setup.
@@ -152,4 +145,124 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadUserDataAndProjectInfo();
+
+    // NEW: Project Feed Loader
+    async function projectLoader() {
+        const projectsGrid = document.getElementById('projects-grid');
+        const loader = document.getElementById('loader');
+        const mainContentEl = document.querySelector('.main-content');
+
+        if (!projectsGrid || !loader || !mainContentEl) {
+            console.error('Required elements for project loader not found.');
+            return;
+        }
+
+        let offset = 0;
+        const limit = 24;
+        let isLoading = false;
+        let hasMore = true;
+        let userId = null;
+
+        async function fetchAndRenderProjects() {
+            if (isLoading || !hasMore) return;
+            isLoading = true;
+            loader.style.display = 'block';
+
+            try {
+                const url = new URL('/api/v1/feed/trending', window.location.origin);
+                url.searchParams.set('limit', limit);
+                url.searchParams.set('offset', offset);
+                url.searchParams.set('feed', 'hot_desktop');
+                url.searchParams.set('range', 'all');
+                if (userId) {
+                    url.searchParams.set('for_user_id', userId);
+                }
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const { feed } = await response.json();
+                
+                const projects = feed.data;
+
+                if (projects.length < limit) {
+                    hasMore = false;
+                    loader.textContent = 'No more projects to load.';
+                }
+                
+                projects.forEach(item => {
+                    const card = createProjectCard(item);
+                    projectsGrid.appendChild(card);
+                });
+                offset += projects.length;
+                
+            } catch (error) {
+                console.error("Failed to fetch projects:", error);
+                loader.textContent = 'Failed to load projects.';
+                hasMore = false; // Stop trying on error
+            } finally {
+                isLoading = false;
+                if(hasMore) {
+                   loader.style.display = 'none';
+                }
+            }
+        }
+    
+        function createProjectCard({ project, site }) {
+            if (!project || !site || !project.created_by) {
+                console.warn('Skipping incomplete project item:', { project, site });
+                return document.createDocumentFragment();
+            }
+
+            const card = document.createElement('a');
+            card.className = 'project-card';
+            card.href = `https://websim.com/p/${project.id}`;
+            card.target = '_blank';
+            
+            const thumbnailUrl = `https://images.websim.com/v1/site/${site.id}/600`;
+            const authorProfileUrl = `https://websim.com/@${project.created_by.username}`;
+            const authorAvatarUrl = `https://images.websim.com/avatar/${project.created_by.username}`;
+
+            card.innerHTML = `
+                <img src="${thumbnailUrl}" alt="${project.title || 'Project thumbnail'}" class="project-thumbnail" loading="lazy" onerror="this.style.backgroundColor='#e0e0e0'; this.removeAttribute('src');">
+                <div class="project-info">
+                    <div class="project-title">${project.title || 'Untitled Project'}</div>
+                    <div class="project-author">
+                        <img src="${authorAvatarUrl}" alt="${project.created_by.username}" class="author-avatar" onerror="this.style.display='none'">
+                        <span>@${project.created_by.username}</span>
+                    </div>
+                </div>
+            `;
+            
+            const authorLinkDiv = card.querySelector('.project-author');
+            authorLinkDiv.addEventListener('click', (e) => {
+                 e.preventDefault();
+                 e.stopPropagation();
+                 window.open(authorProfileUrl, '_blank');
+            });
+
+            return card;
+        }
+
+        function handleScroll() {
+            const { scrollTop, scrollHeight, clientHeight } = mainContentEl;
+            if (scrollTop + clientHeight >= scrollHeight - 500) {
+                fetchAndRenderProjects();
+            }
+        }
+
+        // Initialize
+        try {
+            const user = await window.websim.getUser();
+            if (user && user.id) {
+                userId = user.id;
+            }
+        } catch (e) {
+            console.info("Could not get user for trending feed, proceeding as anonymous.");
+        }
+        
+        await fetchAndRenderProjects();
+        mainContentEl.addEventListener('scroll', handleScroll);
+    }
+
+    projectLoader();
 });
