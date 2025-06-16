@@ -201,7 +201,8 @@ export class ProjectHistoryManager {
                     const bookmarkedVersion = this.currentProject?.current_version;
 
                     const isOffBranch = this.ancestryPathBuilt && 
-                                        !this.mainBranchVersions.has(revisionVersion);
+                                        !this.mainBranchVersions.has(revisionVersion) &&
+                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
 
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.insertBefore(li, this.historyList.firstChild);
@@ -307,7 +308,8 @@ export class ProjectHistoryManager {
                     const bookmarkedVersion = this.currentProject?.current_version;
 
                     const isOffBranch = this.ancestryPathBuilt && 
-                                        !this.mainBranchVersions.has(revisionVersion);
+                                        !this.mainBranchVersions.has(revisionVersion) &&
+                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
                                         
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.appendChild(li);
@@ -386,7 +388,7 @@ export class ProjectHistoryManager {
             const versionNumber = parseInt(li.dataset.versionNumber, 10);
             if (isNaN(versionNumber)) return;
 
-            const shouldBeOffBranch = !this.mainBranchVersions.has(versionNumber);
+            const shouldBeOffBranch = !this.mainBranchVersions.has(versionNumber) && (bookmarkedVersion != null && versionNumber < bookmarkedVersion);
             const isCurrentlyOffBranch = li.classList.contains('is-off-branch');
 
             if (shouldBeOffBranch !== isCurrentlyOffBranch) {
