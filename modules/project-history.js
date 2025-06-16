@@ -307,9 +307,11 @@ export class ProjectHistoryManager {
                     const revisionVersion = item.project_revision.version;
                     const bookmarkedVersion = this.currentProject?.current_version;
 
-                    const isOffBranch = this.ancestryPathBuilt && 
-                                        !this.mainBranchVersions.has(revisionVersion) &&
-                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
+                    const parentVersion = item.project_revision.parent_revision_version;
+                    const isOffBranch = this.ancestryPathBuilt &&
+                        !this.mainBranchVersions.has(revisionVersion) &&
+                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion) &&
+                        (parentVersion != null && !this.mainBranchVersions.has(parentVersion));
                                         
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.appendChild(li);
@@ -387,16 +389,21 @@ export class ProjectHistoryManager {
         itemsInDOM.forEach(li => {
             const versionNumber = parseInt(li.dataset.versionNumber, 10);
             if (isNaN(versionNumber)) return;
+            
+            const revisionData = this.revisionsCache.get(versionNumber);
+            if (!revisionData) return;
 
-            const shouldBeOffBranch = !this.mainBranchVersions.has(versionNumber) && (bookmarkedVersion != null && versionNumber < bookmarkedVersion);
+            const parentVersion = revisionData.project_revision.parent_revision_version;
+
+            const shouldBeOffBranch = !this.mainBranchVersions.has(versionNumber) &&
+                                      (bookmarkedVersion != null && versionNumber < bookmarkedVersion) &&
+                                      (parentVersion != null && !this.mainBranchVersions.has(parentVersion));
+
             const isCurrentlyOffBranch = li.classList.contains('is-off-branch');
 
             if (shouldBeOffBranch !== isCurrentlyOffBranch) {
-                const revisionData = this.revisionsCache.get(versionNumber);
-                if (revisionData) {
-                    const newLi = this.createHistoryItemElement(revisionData, shouldBeOffBranch);
-                    li.parentElement?.replaceChild(newLi, li);
-                }
+                const newLi = this.createHistoryItemElement(revisionData, shouldBeOffBranch);
+                li.parentElement?.replaceChild(newLi, li);
             }
         });
     }
