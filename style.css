@@ -442,7 +442,7 @@ a.project-card:hover .project-title {
     /* overflow-y: auto; For vertical scroll within sidebar */
     width: 0; /* Default state: hidden */
     border-left-width: 0; /* Start with 0 width for border when hidden */
-    transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
+    /* transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out; */
     /* overflow-x: hidden; Hide content during width transition */
     flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
 }
@@ -1544,78 +1544,4 @@ a.project-card:hover .project-title {
     border-radius: 6px;
     line-height: 1.4;
     border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-/* Visibility Selector Styles */
-.visibility-selector-container {
-    position: relative;
-}
-
-#visibility-selector-menu {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    right: 0;
-    width: 200px;
-    background: white;
-    border-radius: 12px;
-    border: 1px solid #e1e5e9;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    z-index: 1000;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.visibility-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.visibility-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    gap: 12px;
-    transition: background-color 0.15s ease-in-out;
-    color: #374151;
-}
-
-.visibility-item:not(.active):hover {
-    background-color: #f3f4f6;
-}
-
-.visibility-item.active {
-    color: #111827;
-}
-
-.visibility-item i {
-    width: 20px;
-    text-align: center;
-    color: #6b7280;
-}
-
-.visibility-item.active > i {
-    color: #111827;
-}
-
-.visibility-item .visibility-name {
-    flex-grow: 1;
-    font-weight: 500;
-}
-
-.visibility-item .visibility-check {
-    width: 16px;
-    visibility: hidden;
-    color: #3b82f6;
-}
-
-.visibility-item.active .visibility-check {
-    visibility: visible;
 }
