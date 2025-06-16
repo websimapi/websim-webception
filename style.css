@@ -772,7 +772,7 @@ a.project-card:hover .project-title {
     border: none;
     cursor: pointer;
     color: #9ca3af;
-    font-size: 16px;
+    font-size: 14px;
     padding: 4px;
     border-radius: 4px;
     transition: color 0.2s, background-color 0.2s;
@@ -787,13 +787,13 @@ a.project-card:hover .project-title {
 }
 
 .history-delete-btn {
-    font-size: 14px; /* A bit smaller icon */
+    font-size: 13px; /* A bit smaller icon */
     color: #b91c1c; /* Dark red icon color (Tailwind red-700) */
     background-color: rgba(239, 68, 68, 0.1); /* Light semi-transparent red background (Tailwind red-500 @ 10%) */
     border: 1px solid rgba(185, 28, 28, 0.15); /* Subtle border for definition */
     border-radius: 6px; /* Rounded square (Tailwind rounded-md) */
-    width: 28px; /* Explicit width for square shape */
-    height: 28px; /* Explicit height for square shape */
+    width: 25px; /* Explicit width for square shape */
+    height: 25px; /* Explicit height for square shape */
     padding: 0; /* Reset padding as width/height are explicit */
 }
 
