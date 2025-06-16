@@ -1233,7 +1233,7 @@ a.project-card:hover .project-title {
 #advanced-abilities-menu {
     position: absolute;
     bottom: calc(100% + 8px);
-    left: 0;
+    left: -60px;
     width: 420px;
     background: white;
     border-radius: 12px;
