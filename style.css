@@ -651,6 +651,7 @@ a.project-card:hover .project-title {
 
 .history-item-avatar {
     width: 112px;
+    aspect-ratio: 16 / 9;
     border-radius: 8px;
     overflow: hidden;
     background-color: #f3f4f6;
