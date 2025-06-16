@@ -196,22 +196,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const views = '13k';
         const likes = '+69';
         const dislikes = '-2';
-        
-        let imageUrl = project_revision.current_screenshot_url;
-        if (!imageUrl && site?.id) {
-            imageUrl = `https://images.websim.com/v1/site/${site.id}/600`;
-        }
-        if (!imageUrl) {
-            imageUrl = '/image.png'; // Fallback to a generic icon
-        }
 
-        const imageAlt = `Thumbnail for V${version}`;
+        const thumbnailUrl = project_revision.current_screenshot_url || (site ? `https://images.websim.com/v1/site/${site.id}/600` : '/a/8e551a64-c2bb-4eb9-9cde-dda6d86c443e');
+        const altText = site?.prompt?.text ? `Thumbnail for: ${site.prompt.text.substring(0, 50)}...` : 'Project version thumbnail';
 
         // Using innerHTML for a more complex structure
         li.innerHTML = `
             <div class="history-item-left">
                 <div class="history-item-avatar">
-                    <img src="${imageUrl}" alt="${imageAlt}" onerror="this.onerror=null; this.src='/image.png';">
+                    <img src="${thumbnailUrl}" alt="${altText}" onerror="this.onerror=null; this.src='/a/8e551a64-c2bb-4eb9-9cde-dda6d86c443e';">
                 </div>
             </div>
             <div class="history-item-center">
