@@ -5,21 +5,16 @@
     box-shadow: -2px 0 5px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
-    /* overflow-y: auto; For vertical scroll within sidebar */
-    width: 0; /* Default state: hidden */
-    border-left-width: 0; /* Start with 0 width for border when hidden */
-    transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
-    /* overflow-x: hidden; Hide content during width transition */
+    width: var(--sidebar-width);
     flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
 }
 
 .sidebar.hidden {
-    overflow: hidden;
+    display: none;
 }
 
 .sidebar:not(.hidden) { /* When sidebar is open (hidden class is NOT present) */
-    width: var(--sidebar-width); /* Slide into view by setting width */
-    border-left-width: 1px; /* Show border */
+    display: flex; /* Ensure it is visible */
 }
 
 .sidebar-top-nav {
