@@ -60,6 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.remove('hidden'); // Show the sidebar
 
+            // When sidebar is opened, force a reload of the history to ensure it's up to date.
+            if (currentProject && currentProject.id) {
+                loadProjectHistory(currentProject.id, true);
+            }
+
             if (mainHeaderLogoWrapper) {
                 mainHeaderLogoWrapper.style.display = 'none'; // Hide the logo and toggle button in the main header
             }
@@ -412,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function loadProjectHistory(projectId) {
+    async function loadProjectHistory(projectId, forceReload = false) {
         const historyList = document.querySelector('.sidebar-history-list');
         if (!historyList) {
             console.error('Sidebar history list element not found.');
@@ -420,9 +425,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const sidebarContent = historyList.parentElement;
     
-        // Static state for pagination, reset only when project ID changes.
-        // Using a static variable inside the function scope.
-        if (!loadProjectHistory.state || loadProjectHistory.state.projectId !== projectId) {
+        // Static state for pagination, reset only when project ID changes or on force reload.
+        if (forceReload || !loadProjectHistory.state || loadProjectHistory.state.projectId !== projectId) {
             loadProjectHistory.state = {
                 projectId: projectId,
                 isLoading: false,
