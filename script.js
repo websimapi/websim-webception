@@ -424,4 +424,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     projectLoader();
+
+    // Chat input auto-resize
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = (chatInput.scrollHeight) + 'px';
+        });
+    }
 });

@@ -115,6 +115,33 @@
                 <!-- Project history will be loaded here dynamically -->
             </ul>
         </div>
+        <div class="sidebar-footer">
+            <div class="chat-input-wrapper">
+                <textarea id="chatInput" placeholder="What would you like to build?" rows="1"></textarea>
+                <div class="chat-input-buttons">
+                    <button class="chat-btn send-btn" title="Send"><i class="fas fa-paper-plane"></i></button>
+                    <button class="chat-btn issues-btn" title="Issues"><i class="fas fa-exclamation"></i></button>
+                </div>
+            </div>
+            <div class="chat-meta-bar">
+                <div class="chat-meta-left">
+                    <button class="meta-btn attachment-btn" title="Attachments">
+                        <i class="fas fa-paperclip"></i>
+                        <span class="badge">1</span>
+                    </button>
+                    <button class="meta-btn model-selector-btn" title="Select Model">
+                        <span>Gemini 2.5 Pro</span>
+                        <i class="fas fa-chevron-up" style="font-size: 0.8em; opacity: 0.7;"></i>
+                    </button>
+                </div>
+                <div class="chat-meta-right">
+                     <button class="meta-btn visibility-btn" title="Visibility">
+                        <i class="fas fa-globe"></i>
+                        <span>Public</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </aside>
 
     <script type="importmap">
