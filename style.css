@@ -5,7 +5,7 @@
 }
 
 :root {
-  --header-height: 73px; /* Default for desktop */
+  --header-height: 42px; /* Default for desktop */
   --sidebar-width: 400px; /* Sidebar width */
   --sidebar-button-size: 36px; /* approx size of .nav-btn with padding */
 }
@@ -30,7 +30,7 @@ body {
 .header {
     background: white;
     border-bottom: 1px solid #e1e5e9;
-    padding: 8px 16px 8px 8px; 
+    padding: 3px 16px 3px 8px; 
     display: flex;
     align-items: center;
     gap: 12px;
@@ -455,7 +455,7 @@ a.project-card:hover .project-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
+    padding: 3px 8px;
     border-bottom: 1px solid #e1e5e9;
     height: var(--header-height); /* Match main header height */
     flex-shrink: 0;
@@ -854,12 +854,12 @@ a.project-card:hover .project-title {
 
 @media (max-width: 768px) {
     :root {
-        --header-height: 65px; /* For mobile */
+        --header-height: 42px; /* For mobile */
         --sidebar-width: 360px; /* Sidebar width for mobile */
     }
 
     .header {
-        padding: 8px 12px;
+        padding: 3px 12px;
         gap: 8px;
     }
     
