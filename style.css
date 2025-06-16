@@ -651,7 +651,7 @@ a.project-card:hover .project-title {
 }
 
 .history-item-avatar {
-    width: 112px;
+    width: 84px;
     border-radius: 8px;
     overflow: hidden;
     background-color: #f3f4f6;
@@ -766,7 +766,7 @@ a.project-card:hover .project-title {
 .history-item-right-bottom-actions {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .history-action-btn {
@@ -774,8 +774,8 @@ a.project-card:hover .project-title {
     border: none;
     cursor: pointer;
     color: #9ca3af;
-    font-size: 14px;
-    padding: 4px;
+    font-size: 12px;
+    padding: 2px;
     border-radius: 4px;
     transition: color 0.2s, background-color 0.2s;
     display: inline-flex; /* Ensure consistent alignment */
@@ -794,8 +794,8 @@ a.project-card:hover .project-title {
     background-color: rgba(239, 68, 68, 0.1); /* Light semi-transparent red background (Tailwind red-500 @ 10%) */
     border: 1px solid rgba(185, 28, 28, 0.15); /* Subtle border for definition */
     border-radius: 6px; /* Rounded square (Tailwind rounded-md) */
-    width: 24px; /* Explicit width for square shape */
-    height: 24px; /* Explicit height for square shape */
+    width: 20px; /* Explicit width for square shape */
+    height: 20px; /* Explicit height for square shape */
     padding: 0; /* Reset padding as width/height are explicit */
 }
 
