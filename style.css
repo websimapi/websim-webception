@@ -713,11 +713,6 @@ a.project-card:hover .project-title {
     opacity: 0.8;
 }
 
-.history-chat-icon {
-    color: #6b7280;
-    font-size: 18px;
-}
-
 .history-prompt-text {
     color: #111827;
     font-weight: 400;
@@ -762,9 +757,14 @@ a.project-card:hover .project-title {
 .history-item-right {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align buttons to the right edge of this container */
-    justify-content: flex-end; /* Pushes both buttons to the bottom */
-    gap: 8px; /* Add some space between the buttons */
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.history-item-right-bottom-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .history-action-btn {

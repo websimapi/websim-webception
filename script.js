@@ -212,11 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             <div class="history-item-center">
-                <div class="history-item-top-bar">
-                    <div class="history-chat-icon">
-                        <i class="fas fa-comment-dots"></i>
-                    </div>
-                </div>
                 <div class="history-prompt-text">
                     ${promptText}
                 </div>
@@ -228,8 +223,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             <div class="history-item-right">
-                <button class="history-action-btn" title="Retry Prompt"><i class="fas fa-redo-alt"></i></button>
-                <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                <button class="history-action-btn" title="More options"><i class="fas fa-ellipsis-v"></i></button>
+                <div class="history-item-right-bottom-actions">
+                    <button class="history-action-btn" title="Retry Prompt"><i class="fas fa-redo-alt"></i></button>
+                    <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                </div>
             </div>
         `;
         
