@@ -186,37 +186,49 @@ document.addEventListener('DOMContentLoaded', function() {
     function createHistoryItemElement({ project_revision, site }) {
         const li = document.createElement('li');
         li.className = 'sidebar-history-item';
+        li.dataset.versionId = project_revision.id;
 
         const version = project_revision.version || '??';
         const promptText = site?.prompt?.text || 'Project version created';
-        const promptType = site?.prompt?.type;
-        const createdAt = project_revision.created_at;
+        const model = site?.model;
 
-        const iconClass = getIconForPromptType(promptType);
-        
-        const versionTag = document.createElement('span');
-        versionTag.className = 'history-version-tag';
-        versionTag.textContent = `V${version}`;
-        li.appendChild(versionTag);
+        // Placeholders for stats not available in the revisions API
+        const views = '13k';
+        const likes = '+69';
+        const dislikes = '-2';
 
-        const icon = document.createElement('i');
-        icon.className = `${iconClass} history-icon`;
-        li.appendChild(icon);
-
-        const detailsDiv = document.createElement('div');
-        detailsDiv.className = 'history-item-details';
-        
-        const textSpan = document.createElement('span');
-        textSpan.className = 'history-text';
-        textSpan.textContent = promptText;
-        detailsDiv.appendChild(textSpan);
-
-        const metaSpan = document.createElement('span');
-        metaSpan.className = 'history-meta';
-        metaSpan.textContent = timeAgo(createdAt);
-        detailsDiv.appendChild(metaSpan);
-
-        li.appendChild(detailsDiv);
+        // Using innerHTML for a more complex structure
+        li.innerHTML = `
+            <div class="history-item-left">
+                <div class="history-item-avatar">
+                    <img src="/a/8e551a64-c2bb-4eb9-9cde-dda6d86c443e" alt="Model icon">
+                </div>
+            </div>
+            <div class="history-item-center">
+                <div class="history-item-top-bar">
+                    <div class="history-version-tag">
+                        <span>V${version}</span>
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                    <div class="history-chat-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                </div>
+                <div class="history-prompt-text">
+                    ${promptText}
+                </div>
+                <div class="history-meta-stats">
+                    <span class="stat-views"><i class="far fa-eye"></i> ${views}</span>
+                    <span class="stat-positive">${likes}</span>
+                    <span class="stat-negative">${dislikes}</span>
+                    <span class="stat-model">${model || 'gemini-pro'}</span>
+                </div>
+            </div>
+            <div class="history-item-right">
+                <button class="history-action-btn" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                <button class="history-action-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `;
         
         return li;
     }
