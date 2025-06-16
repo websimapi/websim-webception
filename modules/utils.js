@@ -51,3 +51,11 @@ export function getRelativeDateGroup(dateString) {
 
     return date.toLocaleString('default', { month: 'long', year: 'numeric' });
 }
+
+export function formatTokens(num) {
+    if (num === undefined || num === null) return '?';
+    if (num >= 1000) {
+        return Math.round(num / 1000) + 'k';
+    }
+    return String(num);
+}

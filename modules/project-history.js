@@ -1,4 +1,4 @@
-import { timeAgo } from './utils.js';
+import { timeAgo, formatTokens } from './utils.js';
 
 export class ProjectHistoryManager {
     constructor() {
@@ -48,7 +48,7 @@ export class ProjectHistoryManager {
 
         const isCurrentVersion = this.currentProject && project_revision.version == this.currentProject.current_version;
 
-        const tokens = '13k';
+        const tokens = formatTokens(site?.stats?.tokens_used);
         const lines_added = '+69';
         const lines_removed = '-2';
 
