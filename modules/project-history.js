@@ -6,6 +6,10 @@ export class ProjectHistoryManager {
         this.historyList = document.querySelector('.sidebar-history-list');
         this.sidebarContent = this.historyList?.parentElement;
         
+        this.mainBranchVersions = new Set();
+        this.revisionsCache = new Map();
+        this.ancestryPathBuilt = false;
+        
         this.init();
     }
 
@@ -22,12 +26,15 @@ export class ProjectHistoryManager {
         this.currentProject = project;
     }
 
-    createHistoryItemElement({ project_revision, site }) {
+    createHistoryItemElement({ project_revision, site }, isOffBranch = false) {
         const li = document.createElement('li');
         li.className = 'sidebar-history-item';
         li.dataset.versionId = project_revision.id;
-
         const version = project_revision.version || '??';
+        li.dataset.versionNumber = version;
+
+        li.classList.toggle('is-off-branch', isOffBranch);
+
         const promptText = site?.prompt?.text || 'Project version created';
         const model = site?.model;
 
@@ -108,6 +115,14 @@ export class ProjectHistoryManager {
                 hasMore: true,
                 limit: 25,
             };
+
+            // Reset ancestry state and begin determination
+            this.ancestryPathBuilt = false;
+            this.mainBranchVersions.clear();
+            this.revisionsCache.clear();
+            this.determineMainBranch(projectId).catch(err => {
+                console.error("Failed to determine main branch:", err);
+            });
             
             // Setup scroll listener only once
             if (!this.sidebarContent.dataset.historyListener) {
@@ -159,7 +174,8 @@ export class ProjectHistoryManager {
                 }
 
                 newItemsData.reverse().forEach(item => {
-                    const li = this.createHistoryItemElement(item);
+                    const isOffBranch = this.ancestryPathBuilt && !this.mainBranchVersions.has(item.project_revision.version);
+                    const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.insertBefore(li, this.historyList.firstChild);
                 });
 
@@ -259,7 +275,8 @@ export class ProjectHistoryManager {
 
             revisions.data.forEach(item => {
                 if (!this.historyList.querySelector(`[data-version-id="${item.project_revision.id}"]`)) {
-                    const li = this.createHistoryItemElement(item);
+                    const isOffBranch = this.ancestryPathBuilt && !this.mainBranchVersions.has(item.project_revision.version);
+                    const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.appendChild(li);
                 }
             });
@@ -282,5 +299,66 @@ export class ProjectHistoryManager {
         } finally {
             if(state) state.isLoading = false;
         }
+    }
+
+    async determineMainBranch(projectId) {
+        let allRevisionsData = [];
+        let hasMore = true;
+        let cursor = null;
+        const limit = 100;
+
+        while (hasMore) {
+            const url = new URL(`/api/v1/projects/${projectId}/revisions`, window.location.origin);
+            url.searchParams.set('first', limit);
+            if (cursor) url.searchParams.set('after', cursor);
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error(`Failed to fetch revisions page: ${response.status}`);
+                break;
+            }
+            const { revisions } = await response.json();
+            if (!revisions || !revisions.data) break;
+
+            allRevisionsData.push(...revisions.data);
+            hasMore = revisions.meta.has_next_page;
+            cursor = revisions.meta.end_cursor;
+        }
+
+        const parentMap = new Map();
+        allRevisionsData.forEach(item => {
+            this.revisionsCache.set(item.project_revision.version, item);
+            if (item.project_revision.parent_revision_version) {
+                parentMap.set(item.project_revision.version, item.project_revision.parent_revision_version);
+            }
+        });
+
+        this.mainBranchVersions.clear();
+        let currentVersionInPath = this.currentProject?.current_version;
+        while (currentVersionInPath) {
+            this.mainBranchVersions.add(currentVersionInPath);
+            currentVersionInPath = parentMap.get(currentVersionInPath);
+        }
+
+        this.ancestryPathBuilt = true;
+        this.updateRenderedItemsStyle();
+    }
+    
+    updateRenderedItemsStyle() {
+        if (!this.ancestryPathBuilt) return;
+        const itemsInDOM = this.historyList.querySelectorAll('.sidebar-history-item:not(.is-off-branch)');
+        
+        itemsInDOM.forEach(li => {
+            const versionNumber = parseInt(li.dataset.versionNumber, 10);
+            if (isNaN(versionNumber) || this.mainBranchVersions.has(versionNumber)) {
+                return;
+            }
+
+            const revisionData = this.revisionsCache.get(versionNumber);
+            if (revisionData) {
+                const newLi = this.createHistoryItemElement(revisionData, true); // Create as off-branch
+                li.parentElement.replaceChild(newLi, li);
+            }
+        });
     }
 }
