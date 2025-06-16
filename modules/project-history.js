@@ -197,7 +197,13 @@ export class ProjectHistoryManager {
                 }
 
                 newItemsData.reverse().forEach(item => {
-                    const isOffBranch = this.ancestryPathBuilt && !this.mainBranchVersions.has(item.project_revision.version);
+                    const revisionVersion = item.project_revision.version;
+                    const bookmarkedVersion = this.currentProject?.current_version;
+
+                    const isOffBranch = this.ancestryPathBuilt && 
+                                        !this.mainBranchVersions.has(revisionVersion) &&
+                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
+
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.insertBefore(li, this.historyList.firstChild);
                 });
@@ -298,7 +304,13 @@ export class ProjectHistoryManager {
 
             revisions.data.forEach(item => {
                 if (!this.historyList.querySelector(`[data-version-id="${item.project_revision.id}"]`)) {
-                    const isOffBranch = this.ancestryPathBuilt && !this.mainBranchVersions.has(item.project_revision.version);
+                    const revisionVersion = item.project_revision.version;
+                    const bookmarkedVersion = this.currentProject?.current_version;
+
+                    const isOffBranch = this.ancestryPathBuilt && 
+                                        !this.mainBranchVersions.has(revisionVersion) &&
+                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
+                                        
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.appendChild(li);
                 }
@@ -369,18 +381,22 @@ export class ProjectHistoryManager {
     
     updateRenderedItemsStyle() {
         if (!this.ancestryPathBuilt) return;
-        const itemsInDOM = this.historyList.querySelectorAll('.sidebar-history-item:not(.is-off-branch)');
+        const itemsInDOM = this.historyList.querySelectorAll('.sidebar-history-item');
+        const bookmarkedVersion = this.currentProject?.current_version;
         
         itemsInDOM.forEach(li => {
             const versionNumber = parseInt(li.dataset.versionNumber, 10);
-            if (isNaN(versionNumber) || this.mainBranchVersions.has(versionNumber)) {
-                return;
-            }
+            if (isNaN(versionNumber)) return;
 
-            const revisionData = this.revisionsCache.get(versionNumber);
-            if (revisionData) {
-                const newLi = this.createHistoryItemElement(revisionData, true); // Create as off-branch
-                li.parentElement.replaceChild(newLi, li);
+            const shouldBeOffBranch = !this.mainBranchVersions.has(versionNumber) && (bookmarkedVersion != null && versionNumber < bookmarkedVersion);
+            const isCurrentlyOffBranch = li.classList.contains('is-off-branch');
+
+            if (shouldBeOffBranch !== isCurrentlyOffBranch) {
+                const revisionData = this.revisionsCache.get(versionNumber);
+                if (revisionData) {
+                    const newLi = this.createHistoryItemElement(revisionData, shouldBeOffBranch);
+                    li.parentElement?.replaceChild(newLi, li);
+                }
             }
         });
     }
