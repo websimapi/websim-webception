@@ -299,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const views = project.stats?.views ?? 0;
         
         const formatStat = (num) => {
+            if (num === null || typeof num === 'undefined') return 0;
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num;
@@ -710,6 +711,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (currentProject.title && sidebarProjectTitle) {
                     sidebarProjectTitle.textContent = currentProject.title;
+                }
+
+                // Update stats bar
+                const formatStat = (num) => {
+                    if (num === null || typeof num === 'undefined') return 0;
+                    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+                    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+                    return num;
+                };
+
+                const revisionsCountEl = document.getElementById('revisionsCountStat');
+                if (revisionsCountEl && currentProject && typeof currentProject.revisions_count !== 'undefined') {
+                    revisionsCountEl.textContent = currentProject.revisions_count;
+                }
+
+                const commentsCountEl = document.getElementById('commentsCountStat');
+                if (commentsCountEl && currentProject && typeof currentProject.comments_count !== 'undefined') {
+                    commentsCountEl.textContent = formatStat(currentProject.comments_count);
+                }
+
+                const viewsCountEl = document.getElementById('viewsCountStat');
+                if (viewsCountEl && currentProject && currentProject.stats && typeof currentProject.stats.views !== 'undefined') {
+                    viewsCountEl.textContent = formatStat(currentProject.stats.views);
                 }
 
                 const description = currentProject.description;
