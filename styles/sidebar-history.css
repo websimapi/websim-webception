@@ -240,6 +240,12 @@
     opacity: 1;
 }
 
+.history-meta-stats .stat-tokens {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .history-meta-stats .stat-lines {
     display: inline-flex;
     gap: 4px;
