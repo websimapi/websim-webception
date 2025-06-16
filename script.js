@@ -60,9 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.remove('hidden'); // Show the sidebar
 
-            // When sidebar is opened, force a reload of the history to ensure it's up to date.
+            // When sidebar is opened, check for new history items without a full reload.
             if (currentProject && currentProject.id) {
-                loadProjectHistory(currentProject.id, true);
+                loadProjectHistory(currentProject.id, { refresh: true });
             }
 
             if (mainHeaderLogoWrapper) {
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const promptText = site?.prompt?.text || 'Project version created';
         const model = site?.model;
 
-        const isCurrentVersion = currentProject && project_revision.version === currentProject.current_version;
+        const isCurrentVersion = currentProject && project_revision.version == currentProject.current_version;
 
         // Placeholders for stats not available in the revisions API
         const views = '13k';
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="history-item-avatar">
                     <div class="history-version-tag ${!isCurrentVersion ? 'is-old-version' : ''}">
                         <span>V${version}</span>
-                        ${isCurrentVersion ? '<i class="far fa-bookmark"></i>' : ''}
+                        ${isCurrentVersion ? ' <i class="far fa-bookmark"></i>' : ''}
                     </div>
                     <img src="${thumbnailUrl}" alt="${altText}">
                 </div>
@@ -351,7 +351,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadCreatorProjects(filter = 'all', query = '') {
         if (!creator || !creator.username) {
             console.error("Creator info not available.");
-            const container = document.getElementById('projects-list-container');
             if(container) container.innerHTML = `<p style="padding: 16px;">Could not load creator's projects.</p>`;
             return;
         }
@@ -370,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (query) url.searchParams.set('query', query);
 
             const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
             const { projects } = await response.json();
 
@@ -417,65 +416,132 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function loadProjectHistory(projectId, forceReload = false) {
+    async function loadProjectHistory(projectId, options = {}) {
+        const { refresh = false } = options;
         const historyList = document.querySelector('.sidebar-history-list');
         if (!historyList) {
             console.error('Sidebar history list element not found.');
             return;
         }
         const sidebarContent = historyList.parentElement;
-    
-        // Static state for pagination, reset only when project ID changes or on force reload.
-        if (forceReload || !loadProjectHistory.state || loadProjectHistory.state.projectId !== projectId) {
+
+        // State initialization/reset on first call or project change
+        if (!loadProjectHistory.state || loadProjectHistory.state.projectId !== projectId) {
+            historyList.innerHTML = '';
+            sidebarContent.scrollTop = 0;
             loadProjectHistory.state = {
                 projectId: projectId,
                 isLoading: false,
+                isRefreshing: false,
                 nextCursor: null,
                 hasMore: true,
                 limit: 25,
             };
-            historyList.innerHTML = ''; // Clear old project data
-            sidebarContent.scrollTop = 0; // Reset scroll
-    
-            // Setup scroll listener only once per sidebar content element
+            
+            // Setup scroll listener only once
             if (!sidebarContent.dataset.historyListener) {
                 sidebarContent.addEventListener('scroll', () => {
-                    // When scrolled near the top, load more.
-                    if (sidebarContent.scrollTop < 200 && loadProjectHistory.state && loadProjectHistory.state.projectId) {
+                    if (sidebarContent.scrollTop < 200 && loadProjectHistory.state && !loadProjectHistory.state.isLoading && loadProjectHistory.state.hasMore) {
                         loadProjectHistory(loadProjectHistory.state.projectId);
                     }
                 });
                 sidebarContent.dataset.historyListener = 'true';
             }
         }
-    
+        
         const state = loadProjectHistory.state;
-        if (state.isLoading || !state.hasMore) {
+
+        // A) Refresh Logic (for sidebar reopen)
+        if (refresh) {
+            if (state.isRefreshing) return;
+            state.isRefreshing = true;
+
+            try {
+                // 1. Get fresh project data for correct bookmark
+                const projectResponse = await fetch(`/api/v1/projects/${projectId}`);
+                if (projectResponse.ok) {
+                    const { project } = await projectResponse.json();
+                    currentProject = project; // Update global `currentProject`
+                }
+
+                // 2. Fetch first page of revisions
+                const url = new URL(`/api/v1/projects/${projectId}/revisions`, window.location.origin);
+                url.searchParams.set('first', state.limit);
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const { revisions } = await response.json();
+
+                if (!revisions.data || revisions.data.length === 0) return;
+
+                // 3. Diff and prepend new items
+                const newestIdInDOM = historyList.firstChild?.dataset.versionId;
+                const newItemsData = [];
+                for (const item of revisions.data) {
+                    if (newestIdInDOM && item.project_revision.id === newestIdInDOM) break;
+                    newItemsData.push(item);
+                }
+
+                newItemsData.reverse().forEach(item => {
+                    const li = createHistoryItemElement(item);
+                    historyList.insertBefore(li, historyList.firstChild);
+                });
+                
+                // 4. Update bookmarks on all items, new and old
+                const allItemsInDOM = historyList.querySelectorAll('.sidebar-history-item');
+                allItemsInDOM.forEach(li => {
+                    if (!li.dataset.versionId) return; // Skip loading placeholders
+                    const versionTag = li.querySelector('.history-version-tag');
+                    if(!versionTag) return;
+                    
+                    const versionSpan = versionTag.querySelector('span');
+                    const version = versionSpan?.textContent?.replace('V', '');
+
+                    const isCurrent = version && currentProject && version == currentProject.current_version;
+                    const hasBookmark = !!versionTag.querySelector('.fa-bookmark');
+                    
+                    versionTag.classList.toggle('is-old-version', !isCurrent);
+
+                    if (isCurrent && !hasBookmark) {
+                        if(versionSpan) versionSpan.insertAdjacentHTML('afterend', ' <i class="far fa-bookmark"></i>');
+                    } else if (!isCurrent && hasBookmark) {
+                        versionTag.querySelector('.fa-bookmark').remove();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Failed to refresh project history:", error);
+            } finally {
+                if(state) state.isRefreshing = false;
+            }
             return;
         }
-    
+
+        // B) Infinite Scroll Logic (for scrolling up to see older items)
+        if (state.isLoading || !state.hasMore || state.isRefreshing) {
+            return;
+        }
         state.isLoading = true;
+        
         const isInitialLoad = !state.nextCursor;
-    
-        if (isInitialLoad) {
+        if (isInitialLoad && historyList.children.length === 0) {
             historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Loading history...</li>';
         }
-    
+
         try {
             const url = new URL(`/api/v1/projects/${projectId}/revisions`, window.location.origin);
             url.searchParams.set('first', state.limit);
             if (state.nextCursor) {
                 url.searchParams.set('after', state.nextCursor);
             }
-    
+
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const { revisions } = await response.json();
-    
+
             if (isInitialLoad) {
                 historyList.innerHTML = '';
             }
-    
+
             if (!revisions.data || revisions.data.length === 0) {
                 if (isInitialLoad) {
                     historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">No history found.</li>';
@@ -485,24 +551,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const oldScrollHeight = sidebarContent.scrollHeight;
-    
+
             revisions.data.forEach(item => {
-                const li = createHistoryItemElement(item);
-                historyList.appendChild(li); // Appending adds to the top visually with column-reverse
+                if (!historyList.querySelector(`[data-version-id="${item.project_revision.id}"]`)) {
+                    const li = createHistoryItemElement(item);
+                    historyList.appendChild(li);
+                }
             });
-    
+
             state.hasMore = revisions.meta.has_next_page;
             state.nextCursor = revisions.meta.end_cursor;
-    
+
             if (isInitialLoad) {
-                // After initial load, scroll to the bottom to show the newest items
                 setTimeout(() => sidebarContent.scrollTop = sidebarContent.scrollHeight, 0);
             } else {
-                // After loading more, adjust scroll to keep user's position stable
                 const newScrollHeight = sidebarContent.scrollHeight;
                 sidebarContent.scrollTop += newScrollHeight - oldScrollHeight;
             }
-    
+
         } catch (error) {
             console.error("Failed to fetch project history:", error);
             if (isInitialLoad) {
