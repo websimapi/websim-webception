@@ -639,7 +639,6 @@ a.project-card:hover .project-title {
     background-color: #f8f9fa;
     cursor: pointer;
     font-size: 14px;
-    max-height: 100px;
 }
 
 .sidebar-history-item:hover {
@@ -651,7 +650,7 @@ a.project-card:hover .project-title {
 }
 
 .history-item-avatar {
-    aspect-ratio: 1 / 1;
+    width: 112px;
     border-radius: 8px;
     overflow: hidden;
     background-color: #f3f4f6;
@@ -955,6 +954,8 @@ a.project-card:hover .project-title {
     line-height: 1.5;
     padding-right: 64px; /* Space for buttons */
     min-height: 21px;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
 .chat-input-buttons {
