@@ -1,10 +1,10 @@
 .sidebar-header {
-    padding: 8px 16px;
+    padding: 4px 16px;
     border-bottom: none;
     display: flex;
     flex-direction: column; 
     flex-shrink: 0;
-    gap: 2px; 
+    gap: 0; 
 }
 
 .sidebar-header-main {
@@ -36,7 +36,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 4px; 
+    gap: 2px; 
     margin-left: auto; 
     flex-shrink: 0; 
 }
@@ -116,7 +116,7 @@
 }
 
 .project-description-container {
-    /* Manages the description block */
+    padding-top: 2px;
 }
 
 #sidebarProjectDescription {
@@ -127,7 +127,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 2px 0;
+    padding: 0;
 }
 
 #sidebarProjectDescription.is-placeholder {
