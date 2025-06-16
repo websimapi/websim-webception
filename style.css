@@ -6,7 +6,7 @@
 
 :root {
   --header-height: 73px; /* Default for desktop */
-  --sidebar-width: 360px; /* Sidebar width */
+  --sidebar-width: 400px; /* Sidebar width */
   --sidebar-button-size: 36px; /* approx size of .nav-btn with padding */
 }
 
@@ -33,7 +33,7 @@ body {
     padding: 8px 16px 8px 8px; 
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -651,10 +651,11 @@ a.project-card:hover .project-title {
 }
 
 .history-item-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
     overflow: hidden;
+    background-color: #f3f4f6;
 }
 
 .history-item-avatar img {
@@ -675,7 +676,7 @@ a.project-card:hover .project-title {
     content: "\f03e"; /* fa-image */
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    font-size: 16px;
+    font-size: 24px;
     color: #9ca3af;
 }
 
@@ -781,7 +782,7 @@ a.project-card:hover .project-title {
 @media (max-width: 768px) {
     :root {
         --header-height: 65px; /* For mobile */
-        --sidebar-width: 320px; /* Sidebar width for mobile */
+        --sidebar-width: 360px; /* Sidebar width for mobile */
     }
 
     .header {
