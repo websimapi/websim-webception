@@ -40,13 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (remixViewBtn && projectsViewBtn && remixView && projectsView) {
         remixViewBtn.addEventListener('click', () => {
-            if(remixView) remixView.style.display = 'block';
+            if(remixView) remixView.style.display = 'flex';
             if(projectsView) projectsView.style.display = 'none';
         });
 
         projectsViewBtn.addEventListener('click', () => {
             if(remixView) remixView.style.display = 'none';
-            if(projectsView) projectsView.style.display = 'block';
+            if(projectsView) projectsView.style.display = 'flex';
             // load projects if not loaded yet
             if (projectsView && !projectsView.dataset.loaded) {
                 loadCreatorProjects();
