@@ -485,6 +485,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     const li = createHistoryItemElement(item);
                     historyList.insertBefore(li, historyList.firstChild);
                 });
+
+                // NEW: Check for updated thumbnails in the newly fetched data
+                revisions.data.forEach(itemData => {
+                    const { project_revision, site } = itemData;
+                    const existingLi = historyList.querySelector(`[data-version-id="${project_revision.id}"]`);
+
+                    if (existingLi) {
+                        const avatarContainer = existingLi.querySelector('.history-item-avatar');
+                        if (avatarContainer && avatarContainer.classList.contains('loading-failed')) {
+                            const newThumbnailUrl = project_revision.current_screenshot_url || (site ? `https://images.websim.com/v1/site/${site.id}/600` : '');
+                            if (newThumbnailUrl) {
+                                avatarContainer.classList.remove('loading-failed');
+                                const newImg = document.createElement('img');
+                                newImg.src = newThumbnailUrl;
+                                newImg.alt = site?.prompt?.text ? `Thumbnail for: ${site.prompt.text.substring(0, 50)}...` : 'Project version thumbnail';
+                                
+                                newImg.onerror = () => {
+                                    if (newImg.parentElement) {
+                                        const parent = newImg.parentElement;
+                                        newImg.remove();
+                                        parent.classList.add('loading-failed');
+                                    }
+                                };
+                                avatarContainer.appendChild(newImg);
+                            }
+                        }
+                    }
+                });
                 
                 // 4. Update bookmarks on all items, new and old
                 const allItemsInDOM = historyList.querySelectorAll('.sidebar-history-item');
@@ -504,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (isCurrent && !hasBookmark) {
                         if(versionSpan) versionSpan.insertAdjacentHTML('afterend', ' <i class="far fa-bookmark"></i>');
                     } else if (!isCurrent && hasBookmark) {
-                        versionTag.querySelector('.fa-bookmark').remove();
+                        versionTag.querySelector('.fa-bookmark')?.remove();
                     }
                 });
 
