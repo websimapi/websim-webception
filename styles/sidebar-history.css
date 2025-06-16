@@ -75,6 +75,7 @@
     align-items: center;
     gap: 8px;
     min-width: 0;
+    position: relative;
 }
 
 .sidebar-history-item.is-off-branch .history-prompt-text {
@@ -86,7 +87,7 @@
     text-overflow: ellipsis;
     flex-grow: 1;
     color: #374151;
-    padding-right: 28px; /* Space for the delete button overlay */
+    padding-right: 28px; /* Space for the delete button */
 }
 
 .sidebar-history-item.is-off-branch .history-version-tag {
@@ -103,6 +104,21 @@
 
 .sidebar-history-item.is-off-branch .history-version-tag i {
     display: none;
+}
+
+.sidebar-history-item.is-off-branch .history-delete-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sidebar-history-item.is-off-branch:hover .history-delete-btn {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .sidebar-history-item:hover {
@@ -265,13 +281,6 @@
 .sidebar-history-item:hover .history-item-right .history-item-right-bottom-actions {
     opacity: 1;
     pointer-events: auto;
-}
-
-.sidebar-history-item.is-off-branch .history-item-right {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .history-action-btn {

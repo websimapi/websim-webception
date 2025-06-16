@@ -61,8 +61,6 @@ export class ProjectHistoryManager {
                     <div class="history-prompt-text">
                         ${promptText}
                     </div>
-                </div>
-                <div class="history-item-right">
                     <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `;
