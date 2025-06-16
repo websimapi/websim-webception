@@ -1415,10 +1415,6 @@ a.project-card:hover .project-title {
     color: white;
 }
 
-.abilities-container {
-    position: relative;
-}
-
 #advanced-abilities-menu {
     position: absolute;
     bottom: calc(100% + 8px);
@@ -1551,7 +1547,7 @@ a.project-card:hover .project-title {
     position: absolute;
     bottom: calc(100% + 8px);
     right: 0;
-    width: 200px;
+    width: 110px;
     background: white;
     border-radius: 12px;
     border: 1px solid #e1e5e9;
