@@ -634,4 +634,52 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Advanced Abilities Menu Logic
+    const abilitiesContainer = document.querySelector('.abilities-container');
+    if (abilitiesContainer) {
+        const abilitiesBtn = abilitiesContainer.querySelector('.attachment-btn');
+        const abilitiesMenu = abilitiesContainer.querySelector('#advanced-abilities-menu');
+        const abilitiesBadge = abilitiesBtn.querySelector('.badge');
+        const checkboxes = abilitiesMenu.querySelectorAll('input[type="checkbox"]');
+
+        const updateBadgeCount = () => {
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            if (abilitiesBadge) {
+                abilitiesBadge.textContent = checkedCount;
+                if (checkedCount > 0) {
+                    abilitiesBadge.style.display = 'flex';
+                } else {
+                    abilitiesBadge.style.display = 'none';
+                }
+            }
+        };
+
+        abilitiesBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isHidden = abilitiesMenu.style.display === 'none';
+            // Also hide model selector if open
+            const modelSelectorMenu = document.querySelector('#model-selector-menu');
+            if(modelSelectorMenu) modelSelectorMenu.style.display = 'none';
+
+            abilitiesMenu.style.display = isHidden ? 'flex' : 'none';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (abilitiesMenu.style.display === 'flex' && !abilitiesContainer.contains(event.target)) {
+                abilitiesMenu.style.display = 'none';
+            }
+        });
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                updateBadgeCount();
+                const abilityName = checkbox.nextElementSibling.querySelector('.ability-title').textContent;
+                console.log(`Ability '${abilityName}' is now ${checkbox.checked ? 'enabled' : 'disabled'}`);
+            });
+        });
+
+        // Initial count on load
+        updateBadgeCount();
+    }
 });
