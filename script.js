@@ -891,12 +891,12 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
             const isHidden = modelSelectorMenu.style.display === 'none';
 
-            // Hide other menus
+            // Close other popups
             const abilitiesMenu = document.querySelector('#advanced-abilities-menu');
             if (abilitiesMenu) abilitiesMenu.style.display = 'none';
             const visibilityMenu = document.querySelector('#visibility-selector-menu');
             if (visibilityMenu) visibilityMenu.style.display = 'none';
-            
+
             modelSelectorMenu.style.display = isHidden ? 'flex' : 'none';
             
             if (modelSelectorBtnIcon) {
@@ -964,14 +964,15 @@ document.addEventListener('DOMContentLoaded', function() {
         abilitiesBtn.addEventListener('click', (event) => {
             event.stopPropagation();
             const isHidden = abilitiesMenu.style.display === 'none';
-
-            // Hide other menus and reset icon
+            
+            // Close other popups and reset model selector icon
             const modelSelectorMenu = document.querySelector('#model-selector-menu');
-            const modelSelectorBtnIcon = document.querySelector('.model-selector-btn i');
+            if (modelSelectorMenu) {
+                modelSelectorMenu.style.display = 'none';
+                const modelSelectorBtnIcon = document.querySelector('.model-selector-btn i');
+                if (modelSelectorBtnIcon) modelSelectorBtnIcon.style.transform = 'rotate(0deg)';
+            }
             const visibilityMenu = document.querySelector('#visibility-selector-menu');
-
-            if (modelSelectorMenu) modelSelectorMenu.style.display = 'none';
-            if (modelSelectorBtnIcon) modelSelectorBtnIcon.style.transform = 'rotate(0deg)';
             if (visibilityMenu) visibilityMenu.style.display = 'none';
 
             abilitiesMenu.style.display = isHidden ? 'flex' : 'none';
@@ -1013,13 +1014,14 @@ document.addEventListener('DOMContentLoaded', function() {
         visibilityBtn.addEventListener('click', (event) => {
             event.stopPropagation();
             const isHidden = visibilityMenu.style.display === 'none';
-            
-            // Hide other menus and reset icon
-            const modelMenu = document.querySelector('#model-selector-menu');
-            const modelSelectorBtnIcon = document.querySelector('.model-selector-btn i');
-            if (modelMenu) modelMenu.style.display = 'none';
-            if (modelSelectorBtnIcon) modelSelectorBtnIcon.style.transform = 'rotate(0deg)';
 
+            // Close other popups and reset model selector icon
+            const modelMenu = document.querySelector('#model-selector-menu');
+            if (modelMenu) {
+                modelMenu.style.display = 'none';
+                const modelSelectorBtnIcon = document.querySelector('.model-selector-btn i');
+                if (modelSelectorBtnIcon) modelSelectorBtnIcon.style.transform = 'rotate(0deg)';
+            }
             const abilitiesMenu = document.querySelector('#advanced-abilities-menu');
             if (abilitiesMenu) abilitiesMenu.style.display = 'none';
             
