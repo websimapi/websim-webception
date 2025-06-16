@@ -1,5 +1,5 @@
 .sidebar-header {
-    padding: 4px 16px;
+    padding: 2px 16px;
     border-bottom: none;
     display: flex;
     flex-direction: column; 
@@ -36,7 +36,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 2px; 
+    gap: 0px; 
     margin-left: auto; 
     flex-shrink: 0; 
 }
@@ -52,7 +52,7 @@
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 6px 12px; 
+    padding: 4px 12px; 
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -68,7 +68,7 @@
     border: none;
     color: #374151; 
     font-size: 20px; 
-    padding: 4px; 
+    padding: 2px; 
     cursor: pointer;
     transition: color 0.2s;
     display: flex;
@@ -116,7 +116,7 @@
 }
 
 .project-description-container {
-    padding-top: 2px;
+    padding-top: 0px;
 }
 
 #sidebarProjectDescription {
