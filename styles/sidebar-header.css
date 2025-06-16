@@ -45,7 +45,13 @@
 .actions-top-row {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 12px;
+}
+
+.like-action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .sidebar-btn-action.post-btn {
@@ -75,7 +81,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 0;
 }
 
 .sidebar-btn-action.heart-icon-btn:hover,
@@ -83,10 +89,10 @@
     color: #ef4444; 
 }
 
-.sidebar-btn-action.heart-icon-btn .heart-count {
-    font-size: 14px;
+.heart-count {
+    font-size: 18px;
     font-weight: 500;
-    color: #374151;
+    color: #111827;
 }
 
 .sidebar-description-meta-row {
