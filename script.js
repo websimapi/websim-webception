@@ -355,16 +355,25 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadUserDataAndProjectInfo() {
         try {
             const user = await window.websim.getUser();
-            const project = await window.websim.getCurrentProject();
-            currentProject = project; // Store project data
+            const projectInfo = await window.websim.getCurrentProject();
 
-            if (project) {
+            if (projectInfo && projectInfo.id) {
+                // Fetch full project data to get current_version and other details.
+                const projectResponse = await fetch(`/api/v1/projects/${projectInfo.id}`);
+                if (!projectResponse.ok) throw new Error(`Failed to fetch project details for ${projectInfo.id}`);
+                const { project } = await projectResponse.json();
+                currentProject = project; // Store full project data
+
                 if (project.title && sidebarProjectTitle) {
                     sidebarProjectTitle.textContent = project.title;
                 }
                 loadProjectHistory(project.id);
-            } else if (sidebarProjectTitle) {
-                sidebarProjectTitle.textContent = document.title || "Project Details"; // Fallback to page title or generic
+
+            } else {
+                currentProject = null;
+                if (sidebarProjectTitle) {
+                    sidebarProjectTitle.textContent = document.title || "Project Details"; // Fallback to page title or generic
+                }
             }
             
             const addressAvatarImg = document.getElementById('userAvatarAddressBar');
