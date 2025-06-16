@@ -21,13 +21,43 @@
 }
 
 .sidebar-history-item.is-off-branch {
-    display: flex;
+    position: relative;
+    padding: 6px 12px 6px 34px;
     height: auto;
-    padding: 6px 8px 6px 34px;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
     background-color: transparent;
-    border: none;
-    cursor: default;
-    grid-template-columns: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 20px;
+    width: calc(100% - 20px);
+}
+
+.sidebar-history-item.is-off-branch::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -12px;
+    border-top: 1px solid #d1d5db;
+    width: 12px;
+    height: 0;
+}
+
+.sidebar-history-item.is-off-branch::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -12px;
+    border-left: 1px solid #d1d5db;
+    width: 0px;
+    height: 100%;
+}
+
+.sidebar-history-item:first-child::after {
+    height: 50%;
+    top: 50%;
 }
 
 .sidebar-history-item.is-off-branch:hover {
@@ -35,20 +65,27 @@
 }
 
 .sidebar-history-item.is-off-branch .history-item-left,
-.sidebar-history-item.is-off-branch .history-item-right {
+.sidebar-history-item.is-off-branch .history-meta-stats {
     display: none;
 }
 
 .sidebar-history-item.is-off-branch .history-item-center {
+    display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
-    width: 100%;
     min-width: 0;
 }
 
-.sidebar-history-item.is-off-branch .history-meta-stats {
-    display: none;
+.sidebar-history-item.is-off-branch .history-prompt-text {
+    padding-top: 0;
+    margin: 0;
+    -webkit-line-clamp: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    color: #374151;
 }
 
 .sidebar-history-item.is-off-branch .history-version-tag {
@@ -58,21 +95,11 @@
     font-weight: 500;
     padding: 2px 6px;
     border: 1px solid #e5e7eb;
+    border-radius: 4px;
 }
 
 .sidebar-history-item.is-off-branch .history-version-tag i {
     display: none;
-}
-
-.sidebar-history-item.is-off-branch .history-prompt-text {
-    padding-top: 0;
-    margin: 0;
-    -webkit-line-clamp: 1;
-    color: #6b7280;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-grow: 1;
 }
 
 .sidebar-history-item:hover {
