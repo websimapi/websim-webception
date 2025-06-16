@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let currentProject = null; // To store current project details
-    let currentRevisionId = null; // To store the ID of the current revision
 
     // Set initial icon for the main header toggle button
     if (sidebarToggle) {
@@ -196,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const promptText = site?.prompt?.text || 'Project version created';
         const model = site?.model;
 
-        const isCurrentVersion = currentRevisionId && project_revision.id === currentRevisionId;
+        const isCurrentVersion = currentProject && project_revision.version === currentProject.current_version;
 
         // Placeholders for stats not available in the revisions API
         const views = '13k';
@@ -254,13 +253,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Add click handler for navigation
-        if (!isCurrentVersion && site && site.versioned_link_url) {
+        if (!isCurrentVersion && site) {
             li.addEventListener('click', (e) => {
                 // Prevent navigation if a button inside the item was clicked
                 if (e.target.closest('.history-action-btn')) {
                     return;
                 }
-                window.location.href = site.versioned_link_url;
+                const versionedUrl = `/p/${project_revision.project_id}/v/${project_revision.version}`;
+                window.location.href = versionedUrl;
             });
         } else {
             // If it's the current version or there's no link, make it non-interactive
@@ -542,22 +542,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const projectSummary = await window.websim.getCurrentProject();
             
             if (projectSummary && projectSummary.id) {
-                // Fetch full project data to get the current revision's ID for bookmarking
+                // Fetch full project data to get current_version for bookmarking
                 try {
                     const response = await fetch(`/api/v1/projects/${projectSummary.id}`);
                     if (response.ok) {
-                        const { project, project_revision } = await response.json();
+                        const { project } = await response.json();
                         currentProject = project;
-                        if (project_revision) {
-                            currentRevisionId = project_revision.id;
-                        }
                     } else {
                         console.error(`Failed to fetch full project details: ${response.status}. Using summary.`);
-                        currentProject = projectSummary;
+                        currentProject = { ...projectSummary, current_version: null }; // Fallback
                     }
                 } catch (e) {
                     console.error('Error fetching full project details. Using summary.', e);
-                    currentProject = projectSummary;
+                    currentProject = { ...projectSummary, current_version: null }; // Fallback
                 }
                 
                 if (currentProject.title && sidebarProjectTitle) {
