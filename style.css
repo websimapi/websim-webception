@@ -6,7 +6,7 @@
 
 :root {
   --header-height: 73px; /* Default for desktop */
-  --sidebar-width: 320px; /* Sidebar width */
+  --sidebar-width: 360px; /* Sidebar width */
   --sidebar-button-size: 36px; /* approx size of .nav-btn with padding */
 }
 
@@ -781,7 +781,7 @@ a.project-card:hover .project-title {
 @media (max-width: 768px) {
     :root {
         --header-height: 65px; /* For mobile */
-        --sidebar-width: 280px; /* Sidebar width for mobile */
+        --sidebar-width: 320px; /* Sidebar width for mobile */
     }
 
     .header {
