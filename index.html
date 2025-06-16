@@ -260,10 +260,31 @@
                         </div>
                     </div>
                     <div class="chat-meta-right">
-                         <button class="meta-btn visibility-btn" title="Visibility">
-                            <i class="fas fa-globe"></i>
-                            <span>Public</span>
-                        </button>
+                         <div class="visibility-selector-container">
+                             <button class="meta-btn visibility-btn" title="Visibility">
+                                <i class="fas fa-globe"></i>
+                                <span>Public</span>
+                            </button>
+                            <div id="visibility-selector-menu" style="display: none;">
+                                <ul class="visibility-list">
+                                    <li class="visibility-item active" data-visibility="public">
+                                        <i class="fas fa-globe"></i>
+                                        <span class="visibility-name">Public</span>
+                                        <span class="visibility-check"><i class="fas fa-check"></i></span>
+                                    </li>
+                                    <li class="visibility-item" data-visibility="unlisted">
+                                        <i class="fas fa-eye-slash"></i>
+                                        <span class="visibility-name">Unlisted</span>
+                                        <span class="visibility-check"><i class="fas fa-check"></i></span>
+                                    </li>
+                                    <li class="visibility-item" data-visibility="private">
+                                        <i class="fas fa-lock"></i>
+                                        <span class="visibility-name">Private</span>
+                                        <span class="visibility-check"><i class="fas fa-check"></i></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

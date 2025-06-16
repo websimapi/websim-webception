@@ -878,4 +878,63 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initial count on load
         updateAbilitiesUI();
     }
+
+    // Visibility Selector Logic
+    const visibilityContainer = document.querySelector('.visibility-selector-container');
+    if (visibilityContainer) {
+        const visibilityBtn = visibilityContainer.querySelector('.visibility-btn');
+        const visibilityMenu = visibilityContainer.querySelector('#visibility-selector-menu');
+        const visibilityBtnIcon = visibilityBtn.querySelector('i');
+        const visibilityBtnText = visibilityBtn.querySelector('span');
+        const visibilityItems = visibilityMenu.querySelectorAll('.visibility-item');
+
+        const visibilityIcons = {
+            public: 'fas fa-globe',
+            unlisted: 'fas fa-eye-slash',
+            private: 'fas fa-lock'
+        };
+
+        visibilityBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isHidden = visibilityMenu.style.display === 'none';
+            // Hide other menus
+            const modelMenu = document.querySelector('#model-selector-menu');
+            if (modelMenu) modelMenu.style.display = 'none';
+            const abilitiesMenu = document.querySelector('#advanced-abilities-menu');
+            if (abilitiesMenu) abilitiesMenu.style.display = 'none';
+            
+            visibilityMenu.style.display = isHidden ? 'flex' : 'none';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!visibilityContainer.contains(event.target)) {
+                visibilityMenu.style.display = 'none';
+            }
+        });
+
+        visibilityItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const currentActive = visibilityMenu.querySelector('.visibility-item.active');
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                }
+                item.classList.add('active');
+
+                const newVisibility = item.dataset.visibility;
+
+                // Update button UI
+                if (visibilityBtnIcon) {
+                    visibilityBtnIcon.className = visibilityIcons[newVisibility];
+                }
+                if (visibilityBtnText) {
+                    visibilityBtnText.textContent = item.querySelector('.visibility-name').textContent;
+                }
+
+                // Close menu
+                visibilityMenu.style.display = 'none';
+
+                console.log(`Project visibility changed to: ${newVisibility}`);
+            });
+        });
+    }
 });
