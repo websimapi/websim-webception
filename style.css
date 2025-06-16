@@ -647,12 +647,10 @@ a.project-card:hover .project-title {
 
 .history-item-left {
     display: flex;
-    align-items: flex-start;
 }
 
 .history-item-avatar {
-    width: 56px;
-    height: 56px;
+    width: 112px;
     border-radius: 8px;
     overflow: hidden;
     background-color: #f3f4f6;
