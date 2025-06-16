@@ -244,6 +244,11 @@ body {
     -ms-overflow-style: none; 
 }
 
+/* Hide scrollbar for WebKit browsers */
+.main-content::-webkit-scrollbar {
+    display: none;
+}
+
 .content-grid {
     flex: 1;
     display: grid;
@@ -439,14 +444,6 @@ a.project-card:hover .project-title {
     transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
     overflow-x: hidden; /* Hide content during width transition */
     flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
-    /* Hide scrollbar for WebKit browsers */
-    &::-webkit-scrollbar {
-        display: none;
-    }
-    /* Hide scrollbar for Firefox */
-    scrollbar-width: none;
-    /* Hide scrollbar for IE/Edge (older versions) */
-    -ms-overflow-style: none;
 }
 
 .sidebar:not(.hidden) { /* When sidebar is open (hidden class is NOT present) */
@@ -626,6 +623,14 @@ a.project-card:hover .project-title {
     padding: 12px; 
     flex-grow: 1;
     overflow-y: auto; /* Already here, good for internal scroll */
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+    /* Hide scrollbar for IE/Edge */
+    -ms-overflow-style: none;
+}
+/* Hide scrollbar for WebKit browsers */
+.sidebar-content::-webkit-scrollbar {
+    display: none;
 }
 
 .sidebar-history-list {
