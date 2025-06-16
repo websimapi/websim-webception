@@ -741,7 +741,7 @@ a.project-card:hover .project-title {
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    word-break: break-word;
+    overflow-wrap: break-word; /* Use modern standard for word wrapping */
 }
 
 .history-meta-stats {
@@ -963,11 +963,12 @@ a.project-card:hover .project-title {
 .chat-input-wrapper {
     position: relative;
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end; /* Align to bottom for better UX with multi-line input */
     background: white;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     padding: 8px;
+    gap: 8px; /* Add gap for robust flexbox layout */
 }
 
 .chat-input-wrapper:focus-within {
@@ -984,16 +985,13 @@ a.project-card:hover .project-title {
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
-    padding-right: 64px; /* Space for buttons */
     min-height: 21px;
 }
 
 .chat-input-buttons {
-    position: absolute;
-    right: 8px;
-    top: 6px;
     display: flex;
     gap: 4px;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .chat-btn {
