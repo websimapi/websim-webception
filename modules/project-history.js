@@ -48,9 +48,9 @@ export class ProjectHistoryManager {
 
         const isCurrentVersion = this.currentProject && project_revision.version == this.currentProject.current_version;
 
-        const views = '13k';
-        const likes = '+69';
-        const dislikes = '-2';
+        const tokens = '13k';
+        const lines_added = '+69';
+        const lines_removed = '-2';
 
         const thumbnailUrl = project_revision.current_screenshot_url || (site ? `https://images.websim.com/v1/site/${site.id}/600` : '');
         const altText = site?.prompt?.text ? `Thumbnail for: ${site.prompt.text.substring(0, 50)}...` : 'Project version thumbnail';
@@ -87,10 +87,12 @@ export class ProjectHistoryManager {
                     ${promptText}
                 </div>
                 <div class="history-meta-stats">
-                    <span class="stat-views"><i class="far fa-eye"></i> ${views}</span>
-                    <span class="stat-positive">${likes}</span>
-                    <span class="stat-negative">${dislikes}</span>
-                    <span class="stat-model">${model || 'gemini-pro'}</span>
+                    <span class="stat-tokens" title="Size in tokens">${tokens}</span>
+                    <span class="stat-lines" title="Lines Changed">
+                        <span class="stat-positive">${lines_added}</span>
+                        <span class="stat-negative">${lines_removed}</span>
+                    </span>
+                    <span class="stat-model" title="User Selected Model">${model || 'gemini-pro'}</span>
                 </div>
             </div>
             <div class="history-item-right">
