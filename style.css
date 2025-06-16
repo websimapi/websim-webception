@@ -42,7 +42,7 @@ body {
 
 .nav-controls {
     display: flex;
-    gap: 4px; 
+    gap: 2px; 
     align-items: center; 
 }
 
@@ -136,7 +136,7 @@ body {
 
 .header-controls {
     display: flex;
-    gap: 8px; 
+    gap: 6px; 
     align-items: center;
 }
 
