@@ -46,14 +46,37 @@ export class ProjectHistoryManager {
 
         const thumbnailUrl = project_revision.current_screenshot_url || (site ? `https://images.websim.com/v1/site/${site.id}/600` : '');
         const altText = site?.prompt?.text ? `Thumbnail for: ${site.prompt.text.substring(0, 50)}...` : 'Project version thumbnail';
+        
+        const versionTagHTML = `
+            <div class="history-version-tag ${!isCurrentVersion ? 'is-old-version' : ''}">
+                <span>V${version}</span>
+                ${isCurrentVersion ? ' <i class="far fa-bookmark"></i>' : ''}
+            </div>
+        `;
+
+        if (isOffBranch) {
+            li.innerHTML = `
+                 ${versionTagHTML}
+                <div class="history-item-center">
+                    <div class="history-prompt-text">
+                        ${promptText}
+                    </div>
+                </div>
+                <div class="history-item-right">
+                    <button class="history-action-btn" title="More options"><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="history-item-right-bottom-actions">
+                        <button class="history-action-btn" title="Retry Prompt"><i class="fas fa-redo-alt"></i></button>
+                        <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `;
+            return li;
+        }
 
         li.innerHTML = `
             <div class="history-item-left">
                 <div class="history-item-avatar">
-                    <div class="history-version-tag ${!isCurrentVersion ? 'is-old-version' : ''}">
-                        <span>V${version}</span>
-                        ${isCurrentVersion ? ' <i class="far fa-bookmark"></i>' : ''}
-                    </div>
+                    ${versionTagHTML}
                     <img src="${thumbnailUrl}" alt="${altText}">
                 </div>
             </div>
