@@ -762,8 +762,8 @@ a.project-card:hover .project-title {
 .history-item-right {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-end; /* Align buttons to the right edge of this container */
+    justify-content: space-between; /* Pushes edit to top, delete to bottom */
 }
 
 .history-action-btn {
@@ -775,11 +775,30 @@ a.project-card:hover .project-title {
     padding: 4px;
     border-radius: 4px;
     transition: color 0.2s, background-color 0.2s;
+    display: inline-flex; /* Ensure consistent alignment */
+    align-items: center;
+    justify-content: center;
 }
 
 .history-action-btn:hover {
     color: #374151;
     background-color: #e5e7eb;
+}
+
+.history-delete-btn {
+    font-size: 14px; /* A bit smaller icon */
+    color: #b91c1c; /* Dark red icon color (Tailwind red-700) */
+    background-color: rgba(239, 68, 68, 0.1); /* Light semi-transparent red background (Tailwind red-500 @ 10%) */
+    border: 1px solid rgba(185, 28, 28, 0.15); /* Subtle border for definition */
+    border-radius: 6px; /* Rounded square (Tailwind rounded-md) */
+    width: 28px; /* Explicit width for square shape */
+    height: 28px; /* Explicit height for square shape */
+    padding: 0; /* Reset padding as width/height are explicit */
+}
+
+.history-delete-btn:hover {
+    color: #991b1b; /* Darker red on hover (Tailwind red-800) */
+    background-color: rgba(239, 68, 68, 0.2); /* Slightly more opaque red on hover */
 }
 
 @media (max-width: 768px) {
