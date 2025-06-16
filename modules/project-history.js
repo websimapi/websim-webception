@@ -185,6 +185,12 @@ export class ProjectHistoryManager {
                         branchStatValue.textContent = this.currentProject.current_version;
                     }
 
+                    // Update like count
+                    const likeCountEl = document.getElementById('like-count');
+                    if (likeCountEl && this.currentProject.stats && this.currentProject.stats.likes != null) {
+                        likeCountEl.textContent = this.currentProject.stats.likes;
+                    }
+
                     // If bookmark changed, recalculate main branch and update styles
                     if (this.ancestryPathBuilt && this.currentProject.current_version !== oldBookmarkedVersion) {
                         this.recalculateMainBranchPath();
