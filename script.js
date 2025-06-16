@@ -197,14 +197,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const likes = '+69';
         const dislikes = '-2';
 
-        const thumbnailUrl = project_revision.current_screenshot_url || (site ? `https://images.websim.com/v1/site/${site.id}/600` : '/a/8e551a64-c2bb-4eb9-9cde-dda6d86c443e');
+        const thumbnailUrl = project_revision.current_screenshot_url || (site ? `https://images.websim.com/v1/site/${site.id}/600` : '');
         const altText = site?.prompt?.text ? `Thumbnail for: ${site.prompt.text.substring(0, 50)}...` : 'Project version thumbnail';
 
         // Using innerHTML for a more complex structure
         li.innerHTML = `
             <div class="history-item-left">
                 <div class="history-item-avatar">
-                    <img src="${thumbnailUrl}" alt="${altText}" onerror="this.onerror=null; this.src='/a/8e551a64-c2bb-4eb9-9cde-dda6d86c443e';">
+                    <img src="${thumbnailUrl}" alt="${altText}">
                 </div>
             </div>
             <div class="history-item-center">
@@ -232,6 +232,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button class="history-action-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
             </div>
         `;
+        
+        const img = li.querySelector('.history-item-avatar img');
+        const avatarContainer = img.parentElement;
+
+        const setFailedState = () => {
+            if (avatarContainer) {
+                img.remove();
+                avatarContainer.classList.add('loading-failed');
+            }
+        };
+
+        img.onerror = setFailedState;
+
+        if (!thumbnailUrl) {
+            setFailedState();
+        }
         
         return li;
     }

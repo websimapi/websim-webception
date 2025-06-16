@@ -663,6 +663,22 @@ a.project-card:hover .project-title {
     object-fit: cover;
 }
 
+.history-item-avatar.loading-failed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6;
+    animation: history-thumb-flash 2.5s infinite ease-in-out;
+}
+
+.history-item-avatar.loading-failed::before {
+    content: "\f03e"; /* fa-image */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 16px;
+    color: #9ca3af;
+}
+
 .history-item-center {
     display: flex;
     flex-direction: column;
@@ -1009,4 +1025,9 @@ a.project-card:hover .project-title {
 
 .model-selector-btn span {
     font-weight: 500;
+}
+
+@keyframes history-thumb-flash {
+    0%, 100% { background-color: #f3f4f6; } /* Lighter grey */
+    50% { background-color: #e5e7eb; } /* Darker grey */
 }
