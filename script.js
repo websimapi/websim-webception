@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let currentProject = null; // To store current project details
-    let currentPageVersion = null; // To store the version number of the page we are on
+    let currentRevisionId = null; // To store the ID of the current revision
 
     // Set initial icon for the main header toggle button
     if (sidebarToggle) {
@@ -196,10 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const promptText = site?.prompt?.text || 'Project version created';
         const model = site?.model;
 
-        // This is for the bookmark icon and special styling. It's the project's default version.
-        const isDefaultVersion = currentProject && project_revision.version === currentProject.current_version;
-        // This is to check if we are currently VIEWING this version's page.
-        const isCurrentPageVersion = project_revision.version === currentPageVersion;
+        const isCurrentVersion = currentRevisionId && project_revision.id === currentRevisionId;
 
         // Placeholders for stats not available in the revisions API
         const views = '13k';
@@ -213,9 +210,9 @@ document.addEventListener('DOMContentLoaded', function() {
         li.innerHTML = `
             <div class="history-item-left">
                 <div class="history-item-avatar">
-                    <div class="history-version-tag ${!isDefaultVersion ? 'is-old-version' : ''}">
+                    <div class="history-version-tag ${!isCurrentVersion ? 'is-old-version' : ''}">
                         <span>V${version}</span>
-                        ${isDefaultVersion ? '<i class="far fa-bookmark"></i>' : ''}
+                        ${isCurrentVersion ? '<i class="far fa-bookmark"></i>' : ''}
                     </div>
                     <img src="${thumbnailUrl}" alt="${altText}">
                 </div>
@@ -257,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Add click handler for navigation
-        if (!isCurrentPageVersion && site && site.versioned_link_url) {
+        if (!isCurrentVersion && site && site.versioned_link_url) {
             li.addEventListener('click', (e) => {
                 // Prevent navigation if a button inside the item was clicked
                 if (e.target.closest('.history-action-btn')) {
@@ -266,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = site.versioned_link_url;
             });
         } else {
-            // If it's the current page version or there's no link, make it non-interactive
+            // If it's the current version or there's no link, make it non-interactive
             li.classList.add('non-interactive');
         }
         
@@ -486,14 +483,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const addressAvatarImg = document.getElementById('userAvatarAddressBar');
         const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
     
-        const pathParts = window.location.pathname.split('/');
-        if (pathParts.length >= 5 && pathParts[3] === 'v') {
-            const parsedVersion = parseInt(pathParts[4], 10);
-            if (!isNaN(parsedVersion)) {
-                currentPageVersion = parsedVersion;
-            }
-        }
-    
         if (isPuppeteer) {
             console.log("Puppeteer environment detected.");
             userForFeed = { username: 'api', id: null };
@@ -553,23 +542,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const projectSummary = await window.websim.getCurrentProject();
             
             if (projectSummary && projectSummary.id) {
-                // Fetch full project data to get current_version for bookmarking
+                // Fetch full project data to get the current revision's ID for bookmarking
                 try {
                     const response = await fetch(`/api/v1/projects/${projectSummary.id}`);
                     if (response.ok) {
-                        const { project } = await response.json();
+                        const { project, project_revision } = await response.json();
                         currentProject = project;
-                        // If on a non-versioned URL, the current page is the project's default version.
-                        if (currentPageVersion === null && currentProject) {
-                            currentPageVersion = currentProject.current_version;
+                        if (project_revision) {
+                            currentRevisionId = project_revision.id;
                         }
                     } else {
                         console.error(`Failed to fetch full project details: ${response.status}. Using summary.`);
-                        currentProject = { ...projectSummary, current_version: null }; // Fallback
+                        currentProject = projectSummary;
                     }
                 } catch (e) {
                     console.error('Error fetching full project details. Using summary.', e);
-                    currentProject = { ...projectSummary, current_version: null }; // Fallback
+                    currentProject = projectSummary;
                 }
                 
                 if (currentProject.title && sidebarProjectTitle) {
