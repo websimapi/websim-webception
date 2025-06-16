@@ -253,14 +253,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Add click handler for navigation
-        if (!isCurrentVersion && site) {
+        if (!isCurrentVersion && site && site.versioned_link_url) {
             li.addEventListener('click', (e) => {
                 // Prevent navigation if a button inside the item was clicked
                 if (e.target.closest('.history-action-btn')) {
                     return;
                 }
-                const versionedUrl = `https://websim.com/p/${project_revision.project_id}/v/${project_revision.version}`;
-                window.location.href = versionedUrl;
+                window.location.href = site.versioned_link_url.split('?')[0];
             });
         } else {
             // If it's the current version or there's no link, make it non-interactive
