@@ -642,9 +642,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const abilitiesMenu = abilitiesContainer.querySelector('#advanced-abilities-menu');
         const abilitiesBadge = abilitiesBtn.querySelector('.badge');
         const checkboxes = abilitiesMenu.querySelectorAll('input[type="checkbox"]');
-        const warningMessage = abilitiesMenu.querySelector('.abilities-warning');
+        const abilitiesWarning = document.getElementById('abilities-warning');
 
-        const updateBadgeCount = () => {
+        const updateAbilitiesUI = () => {
             const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
             if (abilitiesBadge) {
                 abilitiesBadge.textContent = checkedCount;
@@ -654,12 +654,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     abilitiesBadge.style.display = 'none';
                 }
             }
-            if (warningMessage) {
-                if (checkedCount >= 3) {
-                    warningMessage.style.display = 'block';
-                } else {
-                    warningMessage.style.display = 'none';
-                }
+            if (abilitiesWarning) {
+                abilitiesWarning.style.display = checkedCount >= 3 ? 'block' : 'none';
             }
         };
 
@@ -681,13 +677,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
-                updateBadgeCount();
+                updateAbilitiesUI();
                 const abilityName = checkbox.nextElementSibling.querySelector('.ability-title').textContent;
                 console.log(`Ability '${abilityName}' is now ${checkbox.checked ? 'enabled' : 'disabled'}`);
             });
         });
 
         // Initial count on load
-        updateBadgeCount();
+        updateAbilitiesUI();
     }
 });
