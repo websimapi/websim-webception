@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', function() {
     const sidebarToggle = document.getElementById('sidebarToggle'); // Button in main header
     const mainHeaderLogoWrapper = document.getElementById('mainHeaderLogoWrapper'); // Wrapper in main header for logo + toggle
 
@@ -14,53 +14,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
 
     let currentProject = null; // To store current project details
-
-    // NEW: Helper function to create the fallback API user object
-    function createApiUser() {
-        return {
-            username: 'api',
-            id: 'api-user-id-placeholder',
-            avatar_url: 'https://images.websim.com/avatar/api',
-            created_at: null,
-            description: 'API User',
-            twitter: null,
-            discord_username: null,
-            discord_id: null,
-            is_admin: false
-        };
-    }
-
-    // NEW: Centralized user authentication function
-    async function getAuthenticatedUser() {
-        try {
-            let user = await window.websim.getUser();
-
-            if (!user && typeof navigator.webdriver !== 'undefined' && navigator.webdriver) {
-                console.log("Puppeteer instance detected, attempting to use creator's identity or fallback to @api.");
-                try {
-                    const creator = await window.websim.getCreator();
-                    if (creator && creator.username) {
-                        user = creator;
-                        console.log(`Now acting as creator: @${user.username}`);
-                    } else {
-                        user = createApiUser();
-                        console.log("No creator found or creator has no username, falling back to @api user.");
-                    }
-                } catch (e) {
-                    user = createApiUser();
-                    console.error("Error getting creator, falling back to @api user.", e);
-                }
-            }
-            return user;
-        } catch (e) {
-            console.error("Failed to get user", e);
-            if (typeof navigator.webdriver !== 'undefined' && navigator.webdriver) {
-                console.log("getUser() failed, falling back to @api user for puppeteer.");
-                return createApiUser();
-            }
-            return null;
-        }
-    }
 
     // Set initial icon for the main header toggle button
     if (sidebarToggle) {
@@ -398,67 +351,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // MODIFIED: Function to load user avatars and project info
-    async function loadUserDataAndProjectInfo(user) {
-        try {
-            const projectInfo = await window.websim.getCurrentProject();
-
-            if (projectInfo && projectInfo.id) {
-                // Fetch full project data to get current_version and other details.
-                const projectResponse = await fetch(`/api/v1/projects/${projectInfo.id}`);
-                if (!projectResponse.ok) throw new Error(`Failed to fetch project details for ${projectInfo.id}`);
-                const { project } = await projectResponse.json();
-                currentProject = project; // Store full project data
-
-                if (project.title && sidebarProjectTitle) {
-                    sidebarProjectTitle.textContent = project.title;
-                }
-                loadProjectHistory(project.id);
-
-            } else {
-                currentProject = null;
-                if (sidebarProjectTitle) {
-                    sidebarProjectTitle.textContent = document.title || "Project Details"; // Fallback to page title or generic
-                }
-            }
-            
-            const addressAvatarImg = document.getElementById('userAvatarAddressBar');
-            const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon'); 
-
-            if (user && user.username) {
-                const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
-                const avatarAlt = `${user.username}'s avatar`;
-
-                if (addressAvatarImg) {
-                    addressAvatarImg.src = avatarSrc;
-                    addressAvatarImg.alt = avatarAlt;
-                }
-                if (sidebarAvatarImg) { 
-                    sidebarAvatarImg.src = avatarSrc;
-                    sidebarAvatarImg.alt = avatarAlt;
-                }
-
-            } else {
-                console.warn('WebSim user not found or username is missing. Avatars will use default placeholders.');
-                 // Keep default src if user not found
-                if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
-                if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar'; 
-            }
-        } catch (error) {
-            console.error('Error loading user/project data:', error);
-            if (sidebarProjectTitle) {
-                 sidebarProjectTitle.textContent = document.title || "Project Details";
-            }
-            // Ensure alt text is set even on error for sidebar avatar
-            const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
-            if (sidebarAvatarImg) {
-                sidebarAvatarImg.alt = 'User Avatar';
-            }
-        }
-    }
-
-    // MODIFIED: Project Feed Loader
-    async function projectLoader(user) {
+    // NEW: Project Feed Loader
+    async function projectLoader(user) { // MODIFIED to accept user
         const projectsGrid = document.getElementById('projects-grid');
         const loader = document.getElementById('loader');
         const mainContentEl = document.querySelector('.main-content');
@@ -472,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const limit = 24;
         let isLoading = false;
         let hasMore = true;
-        let userId = user ? user.id : null;
+        const userId = user ? user.id : null; // MODIFIED to use passed user
 
         async function fetchAndRenderProjects() {
             if (isLoading || !hasMore) return;
@@ -561,15 +455,123 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
 
+        // Initialize - removed user fetching from here
         await fetchAndRenderProjects();
         mainContentEl.addEventListener('scroll', handleScroll);
     }
+
+    async function main() {
+        const isPuppeteer = navigator.webdriver;
+        let userForFeed = null;
     
-    // NEW EXECUTION ORDER
-    const user = await getAuthenticatedUser();
-    // Run data loading functions in parallel
-    loadUserDataAndProjectInfo(user);
-    projectLoader(user);
+        const addressAvatarImg = document.getElementById('userAvatarAddressBar');
+        const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
+    
+        if (isPuppeteer) {
+            console.log("Puppeteer environment detected.");
+            userForFeed = { username: 'api', id: null };
+            
+            if (addressAvatarImg) {
+                addressAvatarImg.src = '/image.png'; // Use asset: AI gem icon
+                addressAvatarImg.alt = "@api's avatar";
+            }
+    
+            try {
+                const creator = await window.websim.getCreator();
+                if (creator && creator.username) {
+                    if (sidebarAvatarImg) {
+                        sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
+                        sidebarAvatarImg.alt = `${creator.username}'s avatar`;
+                    }
+                } else {
+                    if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
+                }
+            } catch (error) {
+                console.error('Error fetching creator data for puppeteer mode:', error);
+                if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
+            }
+    
+        } else {
+            // Real user logic
+            try {
+                const user = await window.websim.getUser();
+                userForFeed = user;
+    
+                if (user && user.username) {
+                    const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
+                    const avatarAlt = `${user.username}'s avatar`;
+    
+                    if (addressAvatarImg) {
+                        addressAvatarImg.src = avatarSrc;
+                        addressAvatarImg.alt = avatarAlt;
+                    }
+                    if (sidebarAvatarImg) {
+                        sidebarAvatarImg.src = avatarSrc;
+                        sidebarAvatarImg.alt = avatarAlt;
+                    }
+                } else {
+                    console.warn('WebSim user not found. Using default avatars.');
+                    if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
+                    if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
+                if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
+            }
+        }
+    
+        // Load project-specific data (common to both modes)
+        try {
+            const projectSummary = await window.websim.getCurrentProject();
+            
+            if (projectSummary && projectSummary.id) {
+                // Fetch full project data to get current_version for bookmarking
+                try {
+                    const response = await fetch(`/api/v1/projects/${projectSummary.id}`);
+                    if (response.ok) {
+                        const { project } = await response.json();
+                        currentProject = project;
+                    } else {
+                        console.error(`Failed to fetch full project details: ${response.status}. Using summary.`);
+                        currentProject = { ...projectSummary, current_version: null }; // Fallback
+                    }
+                } catch (e) {
+                    console.error('Error fetching full project details. Using summary.', e);
+                    currentProject = { ...projectSummary, current_version: null }; // Fallback
+                }
+                
+                if (currentProject.title && sidebarProjectTitle) {
+                    sidebarProjectTitle.textContent = currentProject.title;
+                }
+
+                const description = currentProject.description;
+                if (descriptionP && description) {
+                    descriptionP.dataset.fullText = description;
+                    descriptionP.classList.remove('is-placeholder');
+                    if (description.length > 100) {
+                        descriptionP.textContent = description.substring(0, 100) + '...';
+                    } else {
+                        descriptionP.textContent = description;
+                    }
+                }
+
+                loadProjectHistory(currentProject.id);
+
+            } else if (sidebarProjectTitle) {
+                sidebarProjectTitle.textContent = document.title || "Project Details";
+            }
+        } catch (error) {
+            console.error('Error loading project data:', error);
+            if (sidebarProjectTitle) {
+                sidebarProjectTitle.textContent = document.title || "Project Details";
+            }
+        }
+    
+        projectLoader(userForFeed);
+    }
+
+    main();
 
     // Chat input auto-resize
     const chatInput = document.getElementById('chatInput');
