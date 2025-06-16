@@ -639,6 +639,7 @@ a.project-card:hover .project-title {
     background-color: #f8f9fa;
     cursor: pointer;
     font-size: 14px;
+    max-height: 100px;
 }
 
 .sidebar-history-item:hover {
@@ -650,7 +651,7 @@ a.project-card:hover .project-title {
 }
 
 .history-item-avatar {
-    width: 112px;
+    aspect-ratio: 1 / 1;
     border-radius: 8px;
     overflow: hidden;
     background-color: #f3f4f6;
