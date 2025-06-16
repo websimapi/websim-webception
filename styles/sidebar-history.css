@@ -4,7 +4,7 @@
     margin: 0;
     display: flex;
     flex-direction: column-reverse;
-    gap: 12px;
+    gap: 4px;
 }
 
 .sidebar-history-item {
@@ -33,6 +33,11 @@
     cursor: pointer;
     margin-left: 20px;
     width: calc(100% - 20px);
+}
+
+.sidebar-history-item.is-off-branch.connected-top::after {
+    top: -4px;
+    height: calc(100% + 4px);
 }
 
 .sidebar-history-item.is-off-branch::before {

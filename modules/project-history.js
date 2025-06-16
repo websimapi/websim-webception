@@ -393,17 +393,30 @@ export class ProjectHistoryManager {
         const itemsInDOM = this.historyList.querySelectorAll('.sidebar-history-item');
         const bookmarkedVersion = this.currentProject?.current_version;
         
-        itemsInDOM.forEach(li => {
+        let previousItemWasOffBranch = false;
+        const reversedItems = Array.from(itemsInDOM).reverse(); // Iterate in visual order (oldest to newest)
+
+        reversedItems.forEach(li => {
             const versionNumber = parseInt(li.dataset.versionNumber, 10);
-            if (isNaN(versionNumber)) return;
+            if (isNaN(versionNumber)) {
+                previousItemWasOffBranch = false;
+                return;
+            }
 
             const isOffBranch = this.isRevisionOffBranch(versionNumber);
+
+            // Add 'connected-top' class if this is an off-branch item and the one before it was too
+            if (isOffBranch && previousItemWasOffBranch) {
+                li.classList.add('connected-top');
+            } else {
+                li.classList.remove('connected-top');
+            }
 
             if (isOffBranch) {
                 const parentVersion = this.parentMap.get(versionNumber);
                 if (parentVersion && this.isRevisionOffBranch(parentVersion)) {
                     li.remove(); // Remove nested subversion
-                    return;
+                    return; // Don't update previousItemWasOffBranch, as this item is removed
                 }
             }
 
@@ -414,9 +427,15 @@ export class ProjectHistoryManager {
                 const revisionData = this.revisionsCache.get(versionNumber);
                 if (revisionData) {
                     const newLi = this.createHistoryItemElement(revisionData, shouldBeOffBranch);
+                    // Check connection status again for the new element
+                    if (shouldBeOffBranch && previousItemWasOffBranch) {
+                        newLi.classList.add('connected-top');
+                    }
                     li.parentElement?.replaceChild(newLi, li);
                 }
             }
+            
+            previousItemWasOffBranch = isOffBranch;
         });
     }
 }
