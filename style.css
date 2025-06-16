@@ -108,7 +108,7 @@ body {
     background: #f0f2f5; 
     border: 1px solid #e1e5e9;
     border-radius: 20px; 
-    padding: 6px 12px; 
+    padding: 3px 12px; 
     gap: 8px;
     min-width: 0; 
 }
@@ -863,9 +863,17 @@ a.project-card:hover .project-title {
         gap: 8px;
     }
     
+    .address-bar-container {
+        flex-grow: 1; 
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        min-width: 0; 
+    }
+
     .address-bar { 
         gap: 4px; 
-        padding: 6px 8px;
+        padding: 4.5px 8px;
     }
 
     .address-bar-avatar {
