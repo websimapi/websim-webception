@@ -97,13 +97,13 @@ body {
     justify-content: center; 
     align-items: center;
     min-width: 0; 
-    padding-left: 60px;
+    padding-left: 65px;
 }
 
 .address-bar {
     flex-shrink: 1; 
-    width: 84.375%; 
-    max-width: 787.5px; 
+    width: 85.5%; 
+    max-width: 797.5px; 
     display: flex;
     align-items: center;
     background: #f0f2f5; 
