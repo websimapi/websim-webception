@@ -443,8 +443,12 @@ a.project-card:hover .project-title {
     width: 0; /* Default state: hidden */
     border-left-width: 0; /* Start with 0 width for border when hidden */
     transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
-    overflow-x: hidden; /* Hide content during width transition */
+    /* overflow-x: hidden; Hide content during width transition */
     flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
+}
+
+.sidebar.hidden {
+    overflow: hidden;
 }
 
 .sidebar:not(.hidden) { /* When sidebar is open (hidden class is NOT present) */
