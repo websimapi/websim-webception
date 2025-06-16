@@ -15,10 +15,44 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let currentProject = null; // To store current project details
+    let creator = null; // To store creator details
 
     // Set initial icon for the main header toggle button
     if (sidebarToggle) {
         sidebarToggle.innerHTML = ICONS.open;
+    }
+
+    // Sidebar tab switching
+    const remixViewBtn = document.getElementById('remixViewBtn');
+    const projectsViewBtn = document.getElementById('projectsViewBtn');
+    const remixView = document.getElementById('remix-view');
+    const projectsView = document.getElementById('projects-view');
+    const sidebarActionButtons = document.querySelectorAll('.sidebar-nav-controls-left .sidebar-action-btn');
+
+    sidebarActionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+             if (btn.id === 'remixViewBtn' || btn.id === 'projectsViewBtn') {
+                sidebarActionButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+        });
+    });
+
+    if (remixViewBtn && projectsViewBtn && remixView && projectsView) {
+        remixViewBtn.addEventListener('click', () => {
+            if(remixView) remixView.style.display = 'block';
+            if(projectsView) projectsView.style.display = 'none';
+        });
+
+        projectsViewBtn.addEventListener('click', () => {
+            if(remixView) remixView.style.display = 'none';
+            if(projectsView) projectsView.style.display = 'block';
+            // load projects if not loaded yet
+            if (projectsView && !projectsView.dataset.loaded) {
+                loadCreatorProjects();
+                projectsView.dataset.loaded = 'true';
+            }
+        });
     }
 
     // Event listener for the main header toggle button (to open sidebar)
@@ -160,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
 
-        if (minutes < 1) return `0m ago`;
+        if (minutes < 1) return `just now`;
         if (minutes < 60) return `${minutes}m ago`;
         if (hours < 24) return `${hours}h ago`;
         return `${days}d ago`;
@@ -253,6 +287,129 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         return li;
+    }
+
+    function createCreatorProjectItem({ project, site }) {
+        const item = document.createElement('div');
+        item.className = 'creator-project-item';
+        
+        const thumbnailUrl = site ? `https://images.websim.com/v1/site/${site.id}/600` : '/image.png';
+
+        const likes = project.stats?.likes ?? 0;
+        const views = project.stats?.views ?? 0;
+        
+        const formatStat = (num) => {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num;
+        };
+
+        item.innerHTML = `
+            <img src="${thumbnailUrl}" class="creator-project-thumbnail" alt="Thumbnail for ${project.title || 'Untitled Project'}" onerror="this.src='/image.png'">
+            <div class="creator-project-details">
+                <div class="creator-project-title">${project.title || 'Untitled Project'}</div>
+                <div class="creator-project-meta">
+                    <div class="creator-project-stats">
+                        <span><i class="far fa-heart"></i> ${formatStat(likes)}</span>
+                        <span><i class="fas fa-chart-bar"></i> ${formatStat(views)}</span>
+                    </div>
+                    <span class="creator-project-time">${timeAgo(project.created_at)}</span>
+                </div>
+            </div>
+            <div class="creator-project-actions">
+                <button class="action-btn" title="Settings"><i class="fas fa-cog"></i></button>
+            </div>
+        `;
+
+        return item;
+    }
+
+    function getRelativeDateGroup(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        if (targetDate.getTime() === today.getTime()) return 'Today';
+        if (targetDate.getTime() === yesterday.getTime()) return 'Yesterday';
+        
+        const oneWeekAgo = new Date(today);
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        if(targetDate > oneWeekAgo) return 'This Week';
+
+        return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
+
+    async function loadCreatorProjects(filter = 'all', query = '') {
+        if (!creator || !creator.username) {
+            console.error("Creator info not available.");
+            const container = document.getElementById('projects-list-container');
+            if(container) container.innerHTML = `<p style="padding: 16px;">Could not load creator's projects.</p>`;
+            return;
+        }
+
+        const container = document.getElementById('projects-list-container');
+        container.innerHTML = `<p style="padding: 16px;">Loading projects...</p>`;
+
+        try {
+            const url = new URL(`/api/v1/users/${creator.username}/projects`, window.location.origin);
+            url.searchParams.set('first', 50);
+            url.searchParams.set('sort_by', 'updated_at');
+            
+            if (filter === 'posted') url.searchParams.set('posted', 'true');
+            else if (filter === 'liked') url.searchParams.set('liked_by_owner', 'true');
+            
+            if (query) url.searchParams.set('query', query);
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+            const { projects } = await response.json();
+
+            if (!projects.data || projects.data.length === 0) {
+                container.innerHTML = `<p style="padding: 16px;">No projects found.</p>`;
+                return;
+            }
+            
+            const groupedProjects = projects.data.reduce((acc, { project, site, project_revision }) => {
+                if (!project || !site) return acc;
+                const group = getRelativeDateGroup(project.created_at);
+                if (!acc[group]) acc[group] = [];
+                acc[group].push({ project, site, project_revision });
+                return acc;
+            }, {});
+
+            container.innerHTML = '';
+            
+            const groupOrder = ['Today', 'Yesterday', 'This Week'];
+            const sortedGroups = Object.keys(groupedProjects).sort((a, b) => {
+                const aIndex = groupOrder.indexOf(a);
+                const bIndex = groupOrder.indexOf(b);
+                if(aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+                if(aIndex !== -1) return -1;
+                if(bIndex !== -1) return 1;
+                return new Date(b) - new Date(a);
+            });
+
+            for (const groupName of sortedGroups) {
+                const groupHeader = document.createElement('div');
+                groupHeader.className = 'section-header';
+                groupHeader.textContent = groupName;
+                container.appendChild(groupHeader);
+                
+                groupedProjects[groupName].forEach(item => {
+                    const projectEl = createCreatorProjectItem(item);
+                    container.appendChild(projectEl);
+                });
+            }
+
+        } catch (error) {
+            console.error("Failed to load creator projects:", error);
+            container.innerHTML = `<p style="padding: 16px;">Failed to load projects.</p>`;
+        }
     }
 
     async function loadProjectHistory(projectId) {
@@ -478,7 +635,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             try {
-                const creator = await window.websim.getCreator();
+                const creatorInfo = await window.websim.getCreator();
+                creator = creatorInfo;
                 if (creator && creator.username) {
                     if (sidebarAvatarImg) {
                         sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
@@ -497,6 +655,9 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const user = await window.websim.getUser();
                 userForFeed = user;
+
+                const creatorInfo = await window.websim.getCreator();
+                creator = creatorInfo;
     
                 if (user && user.username) {
                     const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
@@ -506,15 +667,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         addressAvatarImg.src = avatarSrc;
                         addressAvatarImg.alt = avatarAlt;
                     }
-                    if (sidebarAvatarImg) {
-                        sidebarAvatarImg.src = avatarSrc;
-                        sidebarAvatarImg.alt = avatarAlt;
-                    }
                 } else {
                     console.warn('WebSim user not found. Using default avatars.');
                     if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
-                    if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
                 }
+
+                if (creator && creator.username) {
+                    if (sidebarAvatarImg) {
+                        sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
+                        sidebarAvatarImg.alt = `${creator.username}'s avatar`;
+                    }
+                } else {
+                     if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
+                }
+
             } catch (error) {
                 console.error('Error loading user data:', error);
                 if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
@@ -573,6 +739,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     main();
+
+    // Wire up filters and search for Projects View
+    const projectsViewContainer = document.getElementById('projects-view');
+    if (projectsViewContainer) {
+        const filterBtns = projectsViewContainer.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                const query = projectsViewContainer.querySelector('input').value;
+                loadCreatorProjects(filter, query);
+            });
+        });
+
+        const searchInput = projectsViewContainer.querySelector('input');
+        let searchTimeout;
+        searchInput.addEventListener('keyup', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = e.target.value;
+                const activeFilter = projectsViewContainer.querySelector('.filter-btn.active').dataset.filter;
+                loadCreatorProjects(activeFilter, query);
+            }, 300); // Debounce search
+        });
+    }
 
     // Chat input auto-resize
     const chatInput = document.getElementById('chatInput');
