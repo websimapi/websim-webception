@@ -652,7 +652,7 @@ a.project-card:hover .project-title {
     background-color: #f8f9fa;
     cursor: pointer;
     font-size: 14px;
-    height: 100px;
+    height: 124px;
 }
 
 .sidebar-history-item:hover {
@@ -738,7 +738,7 @@ a.project-card:hover .project-title {
     line-height: 1.4;
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
