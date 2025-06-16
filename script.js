@@ -1,39 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Element Getters ---
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const mainHeaderLogoWrapper = document.getElementById('mainHeaderLogoWrapper');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarInternalControls = document.getElementById('sidebarInternalControls');
-    const sidebarInternalCloseBtn = document.getElementById('sidebarInternalCloseBtn');
-    const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
-    const urlInput = document.querySelector('.url-input');
-    const refreshBtn = document.querySelector('.refresh-btn');
-    const descriptionP = document.getElementById('sidebarProjectDescription');
-    const descriptionTextarea = document.getElementById('sidebarProjectDescriptionInput');
-    const chatInput = document.getElementById('chatInput');
-    const projectsGrid = document.getElementById('projects-grid');
-    const loader = document.getElementById('loader');
-    const mainContentEl = document.querySelector('.main-content');
-    const addressAvatarImg = document.getElementById('userAvatarAddressBar');
-    const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
+    const sidebarToggle = document.getElementById('sidebarToggle'); // Button in main header
+    const mainHeaderLogoWrapper = document.getElementById('mainHeaderLogoWrapper'); // Wrapper in main header for logo + toggle
 
-    // --- State & Constants ---
+    const sidebar = document.getElementById('sidebar');
+    const sidebarInternalControls = document.getElementById('sidebarInternalControls'); // Wrapper in sidebar top nav
+    const sidebarInternalCloseBtn = document.getElementById('sidebarInternalCloseBtn'); // Button in sidebar top nav
+
+    const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
+
     const ICONS = {
         open: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right-open"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path><path d="m10 15-3-3 3-3"></path></svg>`,
         closeSidebar: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-left-close"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/></svg>`,
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
     };
-    let currentProject = null; // Holds data for the project in the sidebar
-    let projectIframe = null; // To hold the iframe element for project view
-    const feedState = {
-        offset: 0,
-        limit: 24,
-        isLoading: false,
-        hasMore: true,
-        user: null
-    };
 
-    // --- UI Handlers (Unchanged) ---
+    let currentProject = null; // To store current project details
+
+    // Set initial icon for the main header toggle button
     if (sidebarToggle) {
         sidebarToggle.innerHTML = ICONS.open;
     }
@@ -75,6 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Handle URL input
+    const urlInput = document.querySelector('.url-input');
+    const refreshBtn = document.querySelector('.refresh-btn'); 
+    
     function handleUrlSubmit() {
         const prompt = urlInput.value.trim();
         if (prompt) {
@@ -115,6 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Sidebar project description handler
+    const descriptionP = document.getElementById('sidebarProjectDescription');
+    const descriptionTextarea = document.getElementById('sidebarProjectDescriptionInput');
+
     if (descriptionP && descriptionTextarea) {
         descriptionP.classList.add('is-placeholder');
 
@@ -162,137 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Chat input auto-resize
-    if (chatInput) {
-        chatInput.addEventListener('input', () => {
-            chatInput.style.height = 'auto';
-            chatInput.style.height = (chatInput.scrollHeight) + 'px';
-        });
-    }
-
-    // --- Navigation & Routing ---
-    function ensureIframe() {
-        if (!projectIframe) {
-            projectIframe = document.createElement('iframe');
-            projectIframe.id = 'project-iframe';
-            projectIframe.className = 'project-iframe';
-            mainContentEl.appendChild(projectIframe);
-        }
-    }
-
-    function navigateTo(url) {
-        const path = new URL(url, window.location.origin).pathname;
-        if (path === window.location.pathname) return;
-        history.pushState({ path }, '', path);
-        handleRouteChange();
-    }
-
-    window.addEventListener('popstate', handleRouteChange);
-
-    async function handleRouteChange() {
-        const path = window.location.pathname;
-        const projectVersionMatch = path.match(/^\/p\/([a-zA-Z0-9_-]{20})\/v\/(\d+)$/);
-        const projectMatch = path.match(/^\/p\/([a-zA-Z0-9_-]{20})$/);
-
-        let projectId, version;
-        if (projectVersionMatch) {
-            [, projectId, version] = projectVersionMatch;
-        } else if (projectMatch) {
-            [, projectId] = projectMatch;
-        }
-
-        if (projectId) {
-            await loadProjectPage(projectId, version);
-        } else {
-            await loadFeedPage();
-        }
-    }
-
-    async function loadProjectPage(projectId, version) {
-        projectsGrid.style.display = 'none';
-        loader.textContent = 'Loading...';
-        loader.style.display = 'block';
-        mainContentEl.style.padding = '0';
-        ensureIframe();
-        projectIframe.style.display = 'none';
-
-        try {
-            const projectData = await fetchProjectData(projectId, version);
-            const resolvedVersion = projectData.project_revision.version;
-            
-            currentProject = projectData.project;
-            updateSidebar(projectData.project);
-            loadProjectHistory(projectId);
-
-            const iframeSrc = `/api/v1/projects/${projectId}/revisions/${resolvedVersion}/html`;
-            projectIframe.src = iframeSrc;
-            projectIframe.onload = () => {
-                loader.style.display = 'none';
-                projectIframe.style.display = 'block';
-            };
-            projectIframe.onerror = () => {
-                loader.textContent = 'Failed to load project.';
-            };
-        } catch (error) {
-            console.error("Failed to load project page:", error);
-            loader.textContent = 'Could not load this project.';
-            mainContentEl.style.padding = '24px'; // Restore padding on error
-        }
-    }
-    
-    async function loadFeedPage() {
-        projectsGrid.style.display = 'grid';
-        loader.style.display = 'none';
-        mainContentEl.style.padding = '24px';
-        if (projectIframe) {
-            projectIframe.style.display = 'none';
-            projectIframe.src = 'about:blank';
-        }
-
-        try {
-            const projectSummary = await window.websim.getCurrentProject();
-            if (projectSummary && projectSummary.id) {
-                const projectData = await fetchProjectData(projectSummary.id);
-                currentProject = projectData.project;
-                updateSidebar(projectData.project);
-                loadProjectHistory(projectSummary.id);
-            }
-        } catch (error) {
-            console.error('Error loading current project data for sidebar:', error);
-            if (sidebarProjectTitle) sidebarProjectTitle.textContent = "Project Details";
-            updateSidebar(null);
-        }
-
-        if (projectsGrid.children.length === 0) {
-            fetchAndRenderProjects();
-        }
-    }
-    
-    async function fetchProjectData(projectId, version) {
-        const url = version ? `/api/v1/projects/${projectId}/revisions/${version}` : `/api/v1/projects/${projectId}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Failed to fetch from ${url}`);
-        return await response.json();
-    }
-    
-    function updateSidebar(project) {
-        const title = project ? project.title || 'Untitled Project' : 'Project Details';
-        const desc = project ? project.description || '' : '';
-
-        if (sidebarProjectTitle) sidebarProjectTitle.textContent = title;
-        if (descriptionP) {
-            descriptionP.dataset.fullText = desc;
-            if (desc) {
-                descriptionP.textContent = desc.length > 100 ? desc.substring(0, 100) + '...' : desc;
-                descriptionP.classList.remove('is-placeholder');
-            } else {
-                descriptionP.textContent = 'Add a description...';
-                descriptionP.classList.add('is-placeholder');
-            }
-        }
-    }
-
-    // --- Data Rendering ---
     function timeAgo(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -336,6 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const version = project_revision.version || '??';
         const promptText = site?.prompt?.text || 'Project version created';
         const model = site?.model;
+
         const isCurrentVersion = currentProject && project_revision.version === currentProject.current_version;
 
         // Placeholders for stats not available in the revisions API
@@ -391,20 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!thumbnailUrl) {
             setFailedState();
-        }
-        
-        // Add click handler for navigation
-        if (!isCurrentVersion && site && site.versioned_link_url) {
-            li.addEventListener('click', (e) => {
-                // Prevent navigation if a button inside the item was clicked
-                if (e.target.closest('.history-action-btn')) {
-                    return;
-                }
-                window.location.href = site.versioned_link_url;
-            });
-        } else {
-            // If it's the current version or there's no link, make it non-interactive
-            li.classList.add('non-interactive');
         }
         
         return li;
@@ -509,6 +354,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // NEW: Project Feed Loader
     async function projectLoader(user) { // MODIFIED to accept user
+        const projectsGrid = document.getElementById('projects-grid');
+        const loader = document.getElementById('loader');
+        const mainContentEl = document.querySelector('.main-content');
+
         if (!projectsGrid || !loader || !mainContentEl) {
             console.error('Required elements for project loader not found.');
             return;
@@ -616,20 +465,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const isPuppeteer = navigator.webdriver;
         let userForFeed = null;
     
+        const addressAvatarImg = document.getElementById('userAvatarAddressBar');
+        const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
+    
         if (isPuppeteer) {
             console.log("Puppeteer environment detected.");
             userForFeed = { username: 'api', id: null };
             
             if (addressAvatarImg) {
-                addressAvatarImg.src = '/a/437f8eb8-d355-4485-a9fb-aaee85e96718'; // Gemini icon
+                addressAvatarImg.src = '/image.png'; // Use asset: AI gem icon
                 addressAvatarImg.alt = "@api's avatar";
             }
     
             try {
                 const creator = await window.websim.getCreator();
-                if (creator && creator.username && sidebarAvatarImg) {
-                    sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
-                    sidebarAvatarImg.alt = `${creator.username}'s avatar`;
+                if (creator && creator.username) {
+                    if (sidebarAvatarImg) {
+                        sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
+                        sidebarAvatarImg.alt = `${creator.username}'s avatar`;
+                    }
+                } else {
+                    if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
                 }
             } catch (error) {
                 console.error('Error fetching creator data for puppeteer mode:', error);
@@ -644,8 +500,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
                 if (user && user.username) {
                     const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
-                    if (addressAvatarImg) addressAvatarImg.src = avatarSrc;
-                    if (sidebarAvatarImg) sidebarAvatarImg.src = avatarSrc;
+                    const avatarAlt = `${user.username}'s avatar`;
+    
+                    if (addressAvatarImg) {
+                        addressAvatarImg.src = avatarSrc;
+                        addressAvatarImg.alt = avatarAlt;
+                    }
+                    if (sidebarAvatarImg) {
+                        sidebarAvatarImg.src = avatarSrc;
+                        sidebarAvatarImg.alt = avatarAlt;
+                    }
+                } else {
+                    console.warn('WebSim user not found. Using default avatars.');
+                    if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
+                    if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -705,4 +573,65 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     main();
+
+    // Chat input auto-resize
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = (chatInput.scrollHeight) + 'px';
+        });
+    }
+
+    // Model Selector Logic
+    const modelSelectorContainer = document.querySelector('.model-selector-container');
+    if (modelSelectorContainer) {
+        const modelSelectorBtn = modelSelectorContainer.querySelector('.model-selector-btn');
+        const modelSelectorMenu = modelSelectorContainer.querySelector('#model-selector-menu');
+        const modelSelectorBtnText = modelSelectorBtn.querySelector('span');
+        const modelSelectorBtnIcon = modelSelectorBtn.querySelector('i');
+        const modelItems = modelSelectorMenu.querySelectorAll('.model-item');
+
+        modelSelectorBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isHidden = modelSelectorMenu.style.display === 'none';
+            modelSelectorMenu.style.display = isHidden ? 'flex' : 'none';
+            
+            if (modelSelectorBtnIcon) {
+                modelSelectorBtnIcon.style.transition = 'transform 0.2s ease-in-out';
+                modelSelectorBtnIcon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!modelSelectorContainer.contains(event.target)) {
+                modelSelectorMenu.style.display = 'none';
+                if (modelSelectorBtnIcon) {
+                    modelSelectorBtnIcon.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+
+        modelItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const currentActive = modelSelectorMenu.querySelector('.model-item.active');
+                if (currentActive) {
+                    currentActive.classList.remove('active');
+                }
+                item.classList.add('active');
+
+                const modelName = item.dataset.modelName;
+                if (modelSelectorBtnText) {
+                    modelSelectorBtnText.textContent = modelName;
+                }
+
+                modelSelectorMenu.style.display = 'none';
+                if (modelSelectorBtnIcon) {
+                    modelSelectorBtnIcon.style.transform = 'rotate(0deg)';
+                }
+
+                console.log(`Model changed to: ${modelName}`);
+            });
+        });
+    }
 });
