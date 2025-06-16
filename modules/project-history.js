@@ -133,6 +133,12 @@ export class ProjectHistoryManager {
                 if (projectResponse.ok) {
                     const { project } = await projectResponse.json();
                     this.currentProject = project;
+
+                    // Update the branch stat value in the sidebar
+                    const branchStatValue = document.getElementById('branch-stat-value');
+                    if (branchStatValue && this.currentProject && this.currentProject.current_version != null) {
+                        branchStatValue.textContent = this.currentProject.current_version;
+                    }
                 }
 
                 // Fetch first page of revisions
