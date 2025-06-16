@@ -3,322 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSim Clone</title>
+    <title>WRLDM</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="/a/ea71a7bc-eff4-46fd-a578-009698ea2f58" type="image/png">
 </head>
 <body>
-    <div class="page-container" id="pageContainer">
-        <header class="header">
-            <div class="nav-controls">
-                <button class="nav-btn"><i class="fas fa-home"></i></button>
-                <button class="nav-btn"><i class="far fa-bell"></i></button>
-                <button class="nav-btn heart-btn"><i class="far fa-heart"></i></button>
-                <div class="nav-divider"></div>
-                <button class="nav-btn"><i class="fas fa-plus"></i></button>
-                <button class="nav-btn refresh-btn"><i class="fas fa-sync-alt"></i></button>
-            </div>
-            
-            <div class="address-bar-container">
-                <div class="address-bar">
-                    <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="address-bar-avatar" id="userAvatarAddressBar">
-                    <input type="text" placeholder="What would you like to change?" class="url-input">
+    <div id="app-container">
+        <div class="page-container" id="pageContainer">
+            <header class="header">
+                <div class="nav-controls">
+                    <button class="nav-btn"><i class="fas fa-home"></i></button>
+                    <button class="nav-btn"><i class="far fa-bell"></i></button>
+                    <button class="nav-btn heart-btn"><i class="far fa-heart"></i></button>
+                    <div class="nav-divider"></div>
+                    <button class="nav-btn"><i class="fas fa-plus"></i></button>
+                    <button class="nav-btn refresh-btn"><i class="fas fa-sync-alt"></i></button>
                 </div>
-            </div>
-            
-            <div class="header-controls">
-                <button class="control-btn"><i class="fas fa-external-link-alt"></i></button>
-                <button class="control-btn diamond-btn">♦</button>
-                <button class="control-btn"><i class="fas fa-ellipsis-v"></i></button>
-                <div class="nav-divider"></div>
-                <div class="logo-sidebar-wrapper" id="mainHeaderLogoWrapper">
-                    <div class="logo" id="mainHeaderLogo">
-                        <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+                
+                <div class="address-bar-container">
+                    <div class="address-bar">
+                        <img src="/a/250c4334-de78-4d0b-8b2b-a7616278f9fe" alt="User Avatar" class="address-bar-avatar" id="userAvatarAddressBar">
+                        <input type="text" placeholder="What would you like to change?" class="url-input">
                     </div>
-                    <button class="sidebar-toggle" id="sidebarToggle">
-                        <!-- Icon is set by JS -->
-                    </button>
                 </div>
-            </div>
-        </header>
+                
+                <div class="header-controls">
+                    <button class="control-btn"><i class="fas fa-external-link-alt"></i></button>
+                    <button class="control-btn diamond-btn">♦</button>
+                    <button class="control-btn"><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="nav-divider"></div>
+                    <div class="logo-sidebar-wrapper" id="mainHeaderLogoWrapper">
+                        <div class="logo" id="mainHeaderLogo">
+                            <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
+                        </div>
+                        <button class="sidebar-toggle" id="sidebarToggle">
+                            <!-- Icon is set by JS -->
+                        </button>
+                    </div>
+                </div>
+            </header>
 
-        <main class="main-content">
-            <div class="content-grid" id="projects-grid">
-                <!-- Project cards will be injected here by script.js -->
-            </div>
-            <div id="loader">Loading...</div>
-        </main>
-    </div>
-
-    <aside class="sidebar hidden" id="sidebar">
-        <div class="sidebar-top-nav">
-            <div class="sidebar-nav-controls-left">
-                <button id="remixViewBtn" class="nav-btn sidebar-action-btn active" title="Branch/Remix">
-                    <i class="fas fa-random"></i>
-                </button>
-                <div class="nav-divider"></div>
-                <button id="projectsViewBtn" class="nav-btn sidebar-action-btn" title="Projects">
-                    <i class="far fa-user"></i>
-                </button>
-                <button class="nav-btn sidebar-action-btn heart-btn" title="Project Likes">
-                    <i class="far fa-heart"></i>
-                </button>
-            </div>
-            <div class="sidebar-nav-controls-right">
-                <div class="logo-sidebar-wrapper" id="sidebarInternalControls" style="display: none;">
-                    <div class="logo sidebar-logo"> 
-                        <span>w</span><span>e</span><span>b</span><span>s</span><span>i</span><span>m</span>
-                    </div>
-                    <button class="nav-btn" id="sidebarInternalCloseBtn" title="Close Sidebar">
-                        <!-- Icon will be set by JS, to ICONS.open -->
-                    </button>
+            <main class="main-content">
+                <div class="content-grid" id="projects-grid">
+                    <!-- Project cards will be injected here by script.js -->
                 </div>
-            </div>
-        </div>
-        <div id="remix-view">
-            <div class="sidebar-header">
-                <div class="sidebar-header-main">
-                    <img src="/a/a27bc614-f9ec-448b-8835-91c2a3b5612c" alt="User Avatar" class="sidebar-project-icon" id="sidebarUserAvatarIcon">
-                    <h3 id="sidebarProjectTitle">Project Title</h3>
-                    <div class="sidebar-header-actions">
-                        <button class="sidebar-btn-action post-btn">Post</button>
-                        <button class="sidebar-btn-action heart-icon-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                </div>
-                <div class="project-description-container">
-                    <p id="sidebarProjectDescription">Add a description...</p>
-                    <textarea id="sidebarProjectDescriptionInput" maxlength="400" rows="4" style="display:none;"></textarea>
-                </div>
-                <div class="sidebar-header-meta">
-                    <span>15m ago</span>
-                </div>
-            </div>
-            <div class="sidebar-stats">
-                <div class="stat-item active">
-                    <span class="stat-value" id="branch-stat-value">33</span>
-                    <i class="fas fa-code-branch"></i>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">0</span>
-                    <i class="far fa-comment-dots"></i>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">17</span>
-                    <i class="fas fa-chart-bar"></i>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-cog"></i>
-                </div>
-            </div>
-            <div class="sidebar-content">
-                <ul class="sidebar-history-list">
-                    <!-- Project history will be loaded here dynamically -->
-                </ul>
-            </div>
-            <div class="sidebar-footer">
-                <div class="chat-input-wrapper">
-                    <textarea id="chatInput" placeholder="What would you like to build?" rows="1"></textarea>
-                    <div class="chat-input-buttons">
-                        <button class="chat-btn send-btn" title="Send"><i class="fas fa-paper-plane"></i></button>
-                        <button class="chat-btn issues-btn" title="Issues"><i class="fas fa-exclamation"></i></button>
-                    </div>
-                </div>
-                <div class="chat-meta-bar">
-                    <div class="chat-meta-left">
-                        <div class="abilities-container">
-                            <button class="meta-btn attachment-btn" title="Advanced Abilities">
-                                <i class="fas fa-flask"></i>
-                                <span class="badge">1</span>
-                            </button>
-                            <div id="advanced-abilities-menu" style="display: none;">
-                                <h3>Advanced Abilities</h3>
-                                <ul>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="ability-multiplayer">
-                                            <div class="ability-content">
-                                                <span class="ability-title">Realtime Multiplayer</span>
-                                                <span class="ability-desc">Create realtime multiplayer games.</span>
-                                            </div>
-                                        </label>
-                                    </li>
-                                    <li>
-                                         <label>
-                                            <input type="checkbox" name="ability-db">
-                                            <div class="ability-content">
-                                                <span class="ability-title">Database</span>
-                                                <span class="ability-desc">Sync and persist data with other users.</span>
-                                            </div>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="ability-db2">
-                                            <div class="ability-content">
-                                                <span class="ability-title">Database v2.1</span>
-                                                <span class="ability-desc">[BETA] Sync and persist data with other users. Now more powerful.</span>
-                                            </div>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="ability-ai">
-                                            <div class="ability-content">
-                                                <span class="ability-title">AI Models</span>
-                                                <span class="ability-desc">Call models to generate text, images, and speech inside your app.</span>
-                                            </div>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="ability-metadata" checked>
-                                            <div class="ability-content">
-                                                <span class="ability-title">Websim Metadata API</span>
-                                                <span class="ability-desc">Access current user's profile, followers, trending projects, etc.</span>
-                                            </div>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="ability-tweaks">
-                                            <div class="ability-content">
-                                                <span class="ability-title">Tweaks (Experimental)</span>
-                                                <span class="ability-desc">Lets you tweak the changes an LLM makes.</span>
-                                            </div>
-                                        </label>
-                                    </li>
-                                </ul>
-                                <div id="abilities-warning" class="abilities-warning" style="display: none;">Abilities are experimental and may conflict with each other.</div>
-                            </div>
-                        </div>
-                        <div class="model-selector-container">
-                            <button class="meta-btn model-selector-btn" title="Select Model">
-                                <span>Gemini 2.5 Pro</span>
-                                <i class="fas fa-chevron-up" style="font-size: 0.8em; opacity: 0.7;"></i>
-                            </button>
-                            <div id="model-selector-menu" style="display: none;">
-                                <div class="model-section">
-                                    <div class="model-section-header">
-                                        <span class="section-title">Free</span>
-                                        <span class="section-cost">0♦</span>
-                                    </div>
-                                    <ul class="model-list">
-                                        <li class="model-item" data-model-name="Gemini Flash 2.5">
-                                            <span class="model-check"><i class="fas fa-check"></i></span>
-                                            <span class="model-name">Gemini Flash 2.5 <i class="fas fa-info-circle"></i></span>
-                                            <span class="model-tag popular">Popular</span>
-                                        </li>
-                                        <li class="model-item" data-model-name="DeepSeek R1">
-                                            <span class="model-check"><i class="fas fa-check"></i></span>
-                                            <span class="model-name">DeepSeek R1 <i class="fas fa-info-circle"></i></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="model-section">
-                                    <div class="model-section-header">
-                                        <span class="section-title">Standard</span>
-                                        <span class="section-cost">100♦</span>
-                                    </div>
-                                    <ul class="model-list">
-                                        <li class="model-item active" data-model-name="Gemini 2.5 Pro">
-                                            <span class="model-check"><i class="fas fa-check"></i></span>
-                                            <span class="model-name">Gemini 2.5 Pro <i class="fas fa-info-circle"></i></span>
-                                            <span class="model-tag popular">Popular</span>
-                                        </li>
-                                        <li class="model-item" data-model-name="Sonnet 3.5">
-                                            <span class="model-check"><i class="fas fa-check"></i></span>
-                                            <span class="model-name">Sonnet 3.5 <i class="fas fa-info-circle"></i></span>
-                                        </li>
-                                        <li class="model-item" data-model-name="o4-mini Thinking">
-                                           <span class="model-check"><i class="fas fa-check"></i></span>
-                                           <span class="model-name">o4-mini Thinking <i class="fas fa-info-circle"></i></span>
-                                        </li>
-                                        <li class="model-item" data-model-name="GPT-4.1">
-                                           <span class="model-check"><i class="fas fa-check"></i></span>
-                                           <span class="model-name">GPT-4.1 <i class="fas fa-info-circle"></i></span>
-                                        </li>
-                                        <li class="model-item" data-model-name="Sonnet 4">
-                                           <span class="model-check"><i class="fas fa-check"></i></span>
-                                           <span class="model-name">Sonnet 4 <i class="fas fa-info-circle"></i></span>
-                                           <span class="model-cost">200♦</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="model-section">
-                                    <div class="model-section-header">
-                                        <span class="section-title">Premium</span>
-                                    </div>
-                                    <ul class="model-list">
-                                        <li class="model-item" data-model-name="Sonnet 4 Thinking">
-                                            <span class="model-check"><i class="fas fa-check"></i></span>
-                                            <span class="model-name">Sonnet 4 Thinking <i class="fas fa-info-circle"></i></span>
-                                            <span class="model-cost">400♦</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-meta-right">
-                         <div class="visibility-selector-container">
-                             <button class="meta-btn visibility-btn" title="Visibility">
-                                <i class="fas fa-globe"></i>
-                                <span>Public</span>
-                            </button>
-                            <div id="visibility-selector-menu" style="display: none;">
-                                <ul class="visibility-list">
-                                    <li class="visibility-item active" data-visibility="public">
-                                        <i class="fas fa-globe"></i>
-                                        <span class="visibility-name">Public</span>
-                                        <span class="visibility-check"><i class="fas fa-check"></i></span>
-                                    </li>
-                                    <li class="visibility-item" data-visibility="unlisted">
-                                        <i class="fas fa-eye-slash"></i>
-                                        <span class="visibility-name">Unlisted</span>
-                                        <span class="visibility-check"><i class="fas fa-check"></i></span>
-                                    </li>
-                                    <li class="visibility-item" data-visibility="private">
-                                        <i class="fas fa-lock"></i>
-                                        <span class="visibility-name">Private</span>
-                                        <span class="visibility-check"><i class="fas fa-check"></i></span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div id="loader">Loading...</div>
+            </main>
         </div>
 
-        <div id="projects-view" style="display: none;">
-            <div class="projects-view-header">
-                <div class="projects-view-search-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search projects">
-                </div>
-            </div>
-            <div class="projects-view-content">
-                <div class="projects-view-filters">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="liked">Liked</button>
-                    <button class="filter-btn" data-filter="posted">Posted</button>
-                </div>
-                <div class="projects-list-container" id="projects-list-container">
-                    <!-- Project items will be injected here -->
-                </div>
-            </div>
-        </div>
-    </aside>
+        <div id="sidebar-container"></div>
 
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
         }
-    }
-    </script>
-    <script src="script.js"></script>
+        </script>
+        <script type="module" src="script.js"></script>
+    </div>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>

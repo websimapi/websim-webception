@@ -1,0 +1,311 @@
+/* Navigation Controls */
+.nav-controls {
+    display: flex;
+    gap: 2px; 
+    align-items: center; 
+}
+
+.nav-btn, .control-btn, .sidebar-toggle {
+    background: none;
+    border: none;
+    border-radius: 50%; 
+    padding: 8px; 
+    cursor: pointer;
+    color: #6b7280;
+    transition: background-color 0.2s, color 0.2s;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    font-size: 18px; 
+    width: var(--sidebar-button-size); 
+    height: var(--sidebar-button-size); 
+}
+
+.nav-btn.heart-btn:hover i {
+    color: red;
+}
+
+.nav-btn:hover, .control-btn:hover, .sidebar-toggle:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+#sidebarCloseBtn:hover {
+    background-color: #e5e7eb; 
+}
+
+.diamond-btn {
+    font-size: 18px;
+}
+
+.nav-divider {
+    width: 1px;
+    height: 16px; 
+    background-color: #d1d5db; 
+    margin: 0 4px; 
+}
+
+/* Address Bar */
+.address-bar-container {
+    flex-grow: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    min-width: 0; 
+    padding-left: 60px;
+}
+
+.address-bar {
+    flex-shrink: 1; 
+    width: 84.375%; 
+    max-width: 787.5px; 
+    display: flex;
+    align-items: center;
+    background: #f0f2f5; 
+    border: 1px solid #e1e5e9;
+    border-radius: 20px; 
+    padding: 3px 12px; 
+    gap: 8px;
+    min-width: 0; 
+}
+
+.address-bar-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.url-input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 14px;
+    color: #374151;
+    padding: 4px 0; 
+}
+
+.url-input::placeholder {
+    color: #6b7280; 
+}
+
+/* Header Controls */
+.header-controls {
+    display: flex;
+    gap: 6px; 
+    align-items: center;
+}
+
+.logo-sidebar-wrapper {
+    display: inline-flex; 
+    align-items: center; 
+    gap: 2px; 
+    padding: 2px 8px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: background-color 0.2s ease-in-out; 
+}
+
+.logo-sidebar-wrapper:hover {
+    background-color: #f3f4f6; 
+}
+
+.logo-sidebar-wrapper .logo {
+    margin-left: 0; 
+    padding-right: 0; 
+}
+
+.control-btn > i, .control-btn > svg {
+    vertical-align: middle;
+}
+
+.wrldm-logo-header {
+    height: 20px; 
+    display: block; 
+}
+
+.header-profile-img {
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Project Cards */
+.project-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.project-card.featured {
+    grid-column: span 2;
+}
+
+.project-thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background-color: #f3f4f6; 
+}
+
+.project-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.project-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #111827;
+    line-height: 1.3;
+}
+
+a.project-card:hover .project-title {
+    text-decoration: underline;
+}
+
+.project-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.project-author:hover {
+    color: #111827;
+}
+
+.author-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#loader {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1rem;
+    color: #6b7280;
+    display: none; 
+}
+
+/* Sim Cards */
+.sim-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.sim-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.sim-card.featured {
+    grid-column: span 2;
+}
+
+.card-image {
+    height: 180px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;
+}
+
+.placeholder-img {
+    background: #6366f1;
+}
+
+.placeholder-img.purple {
+    background: #8b5cf6;
+}
+
+.placeholder-img.green {
+    background: #10b981;
+}
+
+.placeholder-img.blue {
+    background: #3b82f6;
+}
+
+.placeholder-img.orange {
+    background: #f59e0b;
+}
+
+.placeholder-img.teal {
+    background: #14b8a6;
+}
+
+.placeholder-img.navy {
+    background: #1e40af;
+}
+
+.placeholder-img.red {
+    background: #ef4444;
+}
+
+.card-content {
+    padding: 16px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111827;
+    line-height: 1.3;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.creator {
+    color: #4f46e5;
+    font-weight: 500;
+}
