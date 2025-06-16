@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (e.target.closest('.history-action-btn')) {
                     return;
                 }
-                const versionedUrl = `/p/${project_revision.project_id}/v/${project_revision.version}`;
+                const versionedUrl = `https://websim.com/p/${project_revision.project_id}/v/${project_revision.version}`;
                 window.location.href = versionedUrl;
             });
         } else {
