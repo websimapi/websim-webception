@@ -209,7 +209,7 @@
     overflow: hidden;
     word-break: break-word;
     /* The prompt text is now the only element in flow, it will fill the space */
-    padding-top: 8px; /* Give it some space from the top */
+    padding-top: 0; /* Give it some space from the top */
 }
 
 .history-meta-stats {
