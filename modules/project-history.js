@@ -1,4 +1,4 @@
-import { timeAgo, formatTokens } from './utils.js';
+import { timeAgo } from './utils.js';
 
 export class ProjectHistoryManager {
     constructor() {
@@ -48,7 +48,23 @@ export class ProjectHistoryManager {
 
         const isCurrentVersion = this.currentProject && project_revision.version == this.currentProject.current_version;
 
-        const tokens = formatTokens(site?.stats?.tokens_used);
+        let tokens = '';
+        try {
+            if (site && site.yapping) {
+                const yappingData = JSON.parse(site.yapping);
+                if (yappingData && yappingData.stats && typeof yappingData.stats.tokens === 'number') {
+                     const tokenCount = yappingData.stats.tokens;
+                     if (tokenCount >= 1000) {
+                         tokens = (tokenCount / 1000).toFixed(1) + 'k';
+                     } else {
+                         tokens = tokenCount.toString();
+                     }
+                }
+            }
+        } catch (e) {
+            console.warn("Could not parse yapping data for tokens", e);
+        }
+
         const lines_added = '+69';
         const lines_removed = '-2';
 
@@ -87,7 +103,7 @@ export class ProjectHistoryManager {
                     ${promptText}
                 </div>
                 <div class="history-meta-stats">
-                    <span class="stat-tokens" title="Size in tokens">${tokens}</span>
+                    ${tokens ? `<span class="stat-tokens" title="Size in tokens">${tokens}</span>` : ''}
                     <span class="stat-lines" title="Lines Changed">
                         <span class="stat-positive">${lines_added}</span>
                         <span class="stat-negative">${lines_removed}</span>
