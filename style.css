@@ -696,8 +696,8 @@ a.project-card:hover .project-title {
 .history-item-center {
     display: flex;
     flex-direction: column;
-    gap: 4px;
     min-width: 0;
+    position: relative;
 }
 
 .history-item-top-bar {
@@ -741,7 +741,9 @@ a.project-card:hover .project-title {
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    overflow-wrap: break-word; /* Use modern standard for word wrapping */
+    word-break: break-word;
+    /* The prompt text is now the only element in flow, it will fill the space */
+    padding-top: 8px; /* Give it some space from the top */
 }
 
 .history-meta-stats {
@@ -751,7 +753,22 @@ a.project-card:hover .project-title {
     gap: 4px 12px;
     font-size: 12px;
     color: #6b7280;
-    margin-top: auto;
+    /* margin-top: auto; REMOVED to enable overlay behavior */
+
+    /* New overlay styles */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px 8px 8px 8px;
+    background: linear-gradient(to top, #f0f2f5 40%, transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.sidebar-history-item:hover .history-meta-stats {
+    opacity: 1;
 }
 
 .history-meta-stats span {
@@ -783,7 +800,7 @@ a.project-card:hover .project-title {
 
 .history-item-right-bottom-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Changed from column to row */
     gap: 4px;
 }
 
@@ -963,12 +980,11 @@ a.project-card:hover .project-title {
 .chat-input-wrapper {
     position: relative;
     display: flex;
-    align-items: flex-end; /* Align to bottom for better UX with multi-line input */
+    align-items: flex-start;
     background: white;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     padding: 8px;
-    gap: 8px; /* Add gap for robust flexbox layout */
 }
 
 .chat-input-wrapper:focus-within {
@@ -985,13 +1001,16 @@ a.project-card:hover .project-title {
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
+    padding-right: 64px; /* Space for buttons */
     min-height: 21px;
 }
 
 .chat-input-buttons {
+    position: absolute;
+    right: 8px;
+    top: 6px;
     display: flex;
     gap: 4px;
-    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .chat-btn {
