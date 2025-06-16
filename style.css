@@ -727,6 +727,11 @@ a.project-card:hover .project-title {
     opacity: 0.8;
 }
 
+.history-version-tag.is-old-version {
+    background-color: #e5e7eb; /* Tailwind gray-200 */
+    color: #4b5563; /* Tailwind gray-600 */
+}
+
 .history-prompt-text {
     color: #111827;
     font-weight: 400;

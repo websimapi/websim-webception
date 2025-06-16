@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
     };
 
+    let currentProject = null; // To store current project details
+
     // Set initial icon for the main header toggle button
     if (sidebarToggle) {
         sidebarToggle.innerHTML = ICONS.open;
@@ -192,6 +194,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const promptText = site?.prompt?.text || 'Project version created';
         const model = site?.model;
 
+        const isCurrentVersion = currentProject && project_revision.version === currentProject.current_version;
+
         // Placeholders for stats not available in the revisions API
         const views = '13k';
         const likes = '+69';
@@ -204,9 +208,9 @@ document.addEventListener('DOMContentLoaded', function() {
         li.innerHTML = `
             <div class="history-item-left">
                 <div class="history-item-avatar">
-                    <div class="history-version-tag">
+                    <div class="history-version-tag ${!isCurrentVersion ? 'is-old-version' : ''}">
                         <span>V${version}</span>
-                        <i class="far fa-bookmark"></i>
+                        ${isCurrentVersion ? '<i class="far fa-bookmark"></i>' : ''}
                     </div>
                     <img src="${thumbnailUrl}" alt="${altText}">
                 </div>
@@ -352,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const user = await window.websim.getUser();
             const project = await window.websim.getCurrentProject();
+            currentProject = project; // Store project data
 
             if (project) {
                 if (project.title && sidebarProjectTitle) {
