@@ -63,9 +63,7 @@ export class ProjectHistoryManager {
                     </div>
                 </div>
                 <div class="history-item-right">
-                    <div class="history-item-right-bottom-actions">
-                        <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                    </div>
+                    <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `;
             return li;

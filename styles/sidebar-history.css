@@ -24,7 +24,7 @@
     position: relative;
     padding: 2px 12px 2px 34px;
     height: 34px;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     gap: 12px;
     align-items: center;
     background-color: transparent;
@@ -86,6 +86,7 @@
     text-overflow: ellipsis;
     flex-grow: 1;
     color: #374151;
+    padding-right: 28px; /* Space for the delete button overlay */
 }
 
 .sidebar-history-item.is-off-branch .history-version-tag {
@@ -264,6 +265,13 @@
 .sidebar-history-item:hover .history-item-right .history-item-right-bottom-actions {
     opacity: 1;
     pointer-events: auto;
+}
+
+.sidebar-history-item.is-off-branch .history-item-right {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .history-action-btn {
