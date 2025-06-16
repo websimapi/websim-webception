@@ -1,54 +1,53 @@
-import { setupSidebarToggle, setupSidebarTabs, setupProjectDescription, setupChatInput, setupAddressBar } from './js/ui-handlers.js';
-import { setupModelSelector, setupAdvancedAbilities, setupVisibilitySelector, setupDropdownCloseOnClickOutside } from './js/dropdown-handlers.js';
-import { initializeProjectLoader } from './js/project-loader.js';
-import { historyManager } from './js/history-manager.js';
-import { projectsManager } from './js/projects-manager.js';
+import { initUI, setProjectTitle, setProjectDescription, setBranchStat } from './ui.js';
+import { loadProjectFeed, loadProjectHistory, loadCreatorProjects, setGlobalCreator } from './data.js';
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize UI handlers
-    setupSidebarToggle();
-    setupSidebarTabs();
-    setupProjectDescription();
-    setupChatInput();
-    setupAddressBar();
-    
-    // Initialize dropdown handlers
-    setupModelSelector();
-    setupAdvancedAbilities();
-    setupVisibilitySelector();
-    setupDropdownCloseOnClickOutside();
+document.addEventListener('DOMContentLoaded', async function() {
+    initUI({
+        onProjectsViewClick: () => {
+             // load projects if not loaded yet
+            const projectsView = document.getElementById('projects-view');
+            if (projectsView && !projectsView.dataset.loaded) {
+                loadCreatorProjects();
+                projectsView.dataset.loaded = 'true';
+            }
+        },
+        onSidebarOpen: () => {
+            const state = window.websim.currentProjectState;
+            if (state && state.id) {
+                loadProjectHistory(state.id, { refresh: true });
+            }
+        },
+        onProjectsFilterChange: (filter, query) => {
+            loadCreatorProjects(filter, query);
+        },
+        onProjectsSearch: (filter, query) => {
+            loadCreatorProjects(filter, query);
+        }
+    });
 
-    // Initialize main application
-    main();
-});
-
-async function main() {
     const isPuppeteer = navigator.webdriver;
     let userForFeed = null;
-    let currentProject = null;
-    let creator = null;
+    window.websim.currentProjectState = null;
 
     const addressAvatarImg = document.getElementById('userAvatarAddressBar');
     const sidebarAvatarImg = document.getElementById('sidebarUserAvatarIcon');
-    const sidebarProjectTitle = document.getElementById('sidebarProjectTitle');
-    const descriptionP = document.getElementById('sidebarProjectDescription');
 
     if (isPuppeteer) {
         console.log("Puppeteer environment detected.");
         userForFeed = { username: 'api', id: null };
         
         if (addressAvatarImg) {
-            addressAvatarImg.src = '/image.png';
+            addressAvatarImg.src = '/image.png'; // Use asset: AI gem icon
             addressAvatarImg.alt = "@api's avatar";
         }
 
         try {
             const creatorInfo = await window.websim.getCreator();
-            creator = creatorInfo;
-            if (creator && creator.username) {
+            setGlobalCreator(creatorInfo); // Set for data.js
+            if (creatorInfo && creatorInfo.username) {
                 if (sidebarAvatarImg) {
-                    sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
-                    sidebarAvatarImg.alt = `${creator.username}'s avatar`;
+                    sidebarAvatarImg.src = `https://images.websim.com/avatar/${creatorInfo.username}`;
+                    sidebarAvatarImg.alt = `${creatorInfo.username}'s avatar`;
                 }
             } else {
                 if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
@@ -65,7 +64,7 @@ async function main() {
             userForFeed = user;
 
             const creatorInfo = await window.websim.getCreator();
-            creator = creatorInfo;
+            setGlobalCreator(creatorInfo); // Set for data.js
 
             if (user && user.username) {
                 const avatarSrc = `https://images.websim.com/avatar/${user.username}`;
@@ -80,10 +79,10 @@ async function main() {
                 if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
             }
 
-            if (creator && creator.username) {
+            if (creatorInfo && creatorInfo.username) {
                 if (sidebarAvatarImg) {
-                    sidebarAvatarImg.src = `https://images.websim.com/avatar/${creator.username}`;
-                    sidebarAvatarImg.alt = `${creator.username}'s avatar`;
+                    sidebarAvatarImg.src = `https://images.websim.com/avatar/${creatorInfo.username}`;
+                    sidebarAvatarImg.alt = `${creatorInfo.username}'s avatar`;
                 }
             } else {
                  if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
@@ -92,66 +91,43 @@ async function main() {
         } catch (error) {
             console.error('Error loading user data:', error);
             if (addressAvatarImg) addressAvatarImg.alt = 'User Avatar';
-            if (sidebarAvatarImg) sidebarAvatarImg.alt = 'User Avatar';
+            if (sidebarAvatarImg) sidebarAvatarImg.alt = 'Creator Avatar';
         }
     }
 
-    // Load project-specific data
+    // Load project-specific data (common to both modes)
     try {
         const projectSummary = await window.websim.getCurrentProject();
         
         if (projectSummary && projectSummary.id) {
+            // Fetch full project data to get current_version for bookmarking
             try {
                 const response = await fetch(`/api/v1/projects/${projectSummary.id}`);
                 if (response.ok) {
                     const { project } = await response.json();
-                    currentProject = project;
-                    // Make available globally for compatibility
-                    window.currentProject = currentProject;
+                    window.websim.currentProjectState = project;
                 } else {
                     console.error(`Failed to fetch full project details: ${response.status}. Using summary.`);
-                    currentProject = { ...projectSummary, current_version: null };
-                    window.currentProject = currentProject;
+                    window.websim.currentProjectState = { ...projectSummary, current_version: null }; // Fallback
                 }
             } catch (e) {
                 console.error('Error fetching full project details. Using summary.', e);
-                currentProject = { ...projectSummary, current_version: null };
-                window.currentProject = currentProject;
+                window.websim.currentProjectState = { ...projectSummary, current_version: null }; // Fallback
             }
             
-            if (currentProject.title && sidebarProjectTitle) {
-                sidebarProjectTitle.textContent = currentProject.title;
-            }
+            const project = window.websim.currentProjectState;
+            setProjectTitle(project.title);
+            setBranchStat(project.current_version);
+            setProjectDescription(project.description);
+            loadProjectHistory(project.id);
 
-            const branchStatValue = document.getElementById('branch-stat-value');
-            if (branchStatValue && currentProject && currentProject.current_version != null) {
-                branchStatValue.textContent = currentProject.current_version;
-            }
-
-            const description = currentProject.description;
-            if (descriptionP && description) {
-                descriptionP.dataset.fullText = description;
-                descriptionP.classList.remove('is-placeholder');
-                if (description.length > 100) {
-                    descriptionP.textContent = description.substring(0, 100) + '...';
-                } else {
-                    descriptionP.textContent = description;
-                }
-            }
-
-            historyManager.loadProjectHistory(currentProject.id);
-
-        } else if (sidebarProjectTitle) {
-            sidebarProjectTitle.textContent = document.title || "Project Details";
+        } else {
+            setProjectTitle(document.title || "Project Details");
         }
     } catch (error) {
         console.error('Error loading project data:', error);
-        if (sidebarProjectTitle) {
-            sidebarProjectTitle.textContent = document.title || "Project Details";
-        }
+        setProjectTitle(document.title || "Project Details");
     }
 
-    // Initialize managers
-    projectsManager.setCreator(creator);
-    initializeProjectLoader(userForFeed);
-}
+    loadProjectFeed(userForFeed);
+});
