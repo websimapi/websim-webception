@@ -642,6 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const abilitiesMenu = abilitiesContainer.querySelector('#advanced-abilities-menu');
         const abilitiesBadge = abilitiesBtn.querySelector('.badge');
         const checkboxes = abilitiesMenu.querySelectorAll('input[type="checkbox"]');
+        const warningMessage = abilitiesMenu.querySelector('.abilities-warning');
 
         const updateBadgeCount = () => {
             const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
@@ -651,6 +652,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     abilitiesBadge.style.display = 'flex';
                 } else {
                     abilitiesBadge.style.display = 'none';
+                }
+            }
+            if (warningMessage) {
+                if (checkedCount >= 3) {
+                    warningMessage.style.display = 'block';
+                } else {
+                    warningMessage.style.display = 'none';
                 }
             }
         };

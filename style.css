@@ -1226,32 +1226,11 @@ a.project-card:hover .project-title {
     color: white;
 }
 
-/* Advanced Abilities Menu Styles */
-.abilities-container {
-    position: relative;
-}
-
-#advanced-abilities-menu {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 0;
-    width: 360px;
-    background: white;
-    border-radius: 12px;
-    border: 1px solid #e1e5e9;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    z-index: 1000;
-    padding: 16px;
-    display: none; /* JS toggles to flex */
-    flex-direction: column;
-    gap: 12px;
-}
-
-#advanced-abilities-menu h3 {
-    font-size: 18px;
-    font-weight: 500;
-    color: #111827;
-    margin: 0;
+.abilities-warning {
+    display: none; /* Hidden by default, JS will show it */
+    color: #a1396a;
+    font-size: 13px;
+    line-height: 1.4;
 }
 
 #advanced-abilities-menu ul {
