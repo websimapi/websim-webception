@@ -204,15 +204,15 @@ document.addEventListener('DOMContentLoaded', function() {
         li.innerHTML = `
             <div class="history-item-left">
                 <div class="history-item-avatar">
+                    <div class="history-version-tag">
+                        <span>V${version}</span>
+                        <i class="far fa-bookmark"></i>
+                    </div>
                     <img src="${thumbnailUrl}" alt="${altText}">
                 </div>
             </div>
             <div class="history-item-center">
                 <div class="history-item-top-bar">
-                    <div class="history-version-tag">
-                        <span>V${version}</span>
-                        <i class="far fa-bookmark"></i>
-                    </div>
                     <div class="history-chat-icon">
                         <i class="fas fa-comment-dots"></i>
                     </div>
