@@ -769,6 +769,19 @@ a.project-card:hover .project-title {
     gap: 4px;
 }
 
+.history-item-right > .history-action-btn,
+.history-item-right .history-item-right-bottom-actions {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.sidebar-history-item:hover .history-item-right > .history-action-btn,
+.sidebar-history-item:hover .history-item-right .history-item-right-bottom-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .history-action-btn {
     background: none;
     border: none;
