@@ -97,6 +97,7 @@ body {
     justify-content: center; 
     align-items: center;
     min-width: 0; 
+    padding-left: 60px;
 }
 
 .address-bar {
