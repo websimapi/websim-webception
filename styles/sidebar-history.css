@@ -238,12 +238,7 @@
 
 .sidebar-history-item:hover .history-meta-stats {
     opacity: 1;
-}
-
-.history-meta-stats .stat-tokens {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+    pointer-events: auto;
 }
 
 .history-meta-stats .stat-lines {
