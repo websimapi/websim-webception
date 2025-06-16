@@ -443,7 +443,7 @@ a.project-card:hover .project-title {
     width: 0; /* Default state: hidden */
     border-left-width: 0; /* Start with 0 width for border when hidden */
     transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
-    /* overflow-x: hidden; Hide content during width transition */
+    overflow-x: hidden; /* Hide content during width transition */
     flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
 }
 
@@ -1415,6 +1415,10 @@ a.project-card:hover .project-title {
     color: white;
 }
 
+.abilities-container {
+    position: relative;
+}
+
 #advanced-abilities-menu {
     position: absolute;
     bottom: calc(100% + 8px);
@@ -1536,51 +1540,4 @@ a.project-card:hover .project-title {
     border-radius: 6px;
     line-height: 1.4;
     border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-/* Visibility Selector Styles */
-.visibility-selector-container {
-    position: relative;
-}
-
-#visibility-selector-menu {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    right: 0;
-    width: 110px;
-    background: white;
-    border-radius: 12px;
-    border: 1px solid #e1e5e9;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    z-index: 1000;
-    padding: 8px;
-    display: none; /* Initially hidden, JS changes to flex */
-    flex-direction: column;
-    gap: 8px;
-}
-
-.visibility-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.visibility-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 9px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: #374151;
-    gap: 10px;
-    transition: background-color 0.15s ease-in-out;
-}
-
-.visibility-item:hover {
-    background-color: #f3f4f6;
 }
