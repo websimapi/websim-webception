@@ -445,6 +445,7 @@ a.project-card:hover .project-title {
     transition: width 0.3s ease-in-out, border-left-width 0.3s ease-in-out;
     /* overflow-x: hidden; Hide content during width transition */
     flex-shrink: 0; /* Prevent sidebar from shrinking if page content is too wide */
+    overflow: visible; /* Allow content to overflow for menus */
 }
 
 .sidebar:not(.hidden) { /* When sidebar is open (hidden class is NOT present) */
@@ -1166,6 +1167,7 @@ a.project-card:hover .project-title {
     border-top: 1px solid #e5e7eb;
     flex-shrink: 0;
     background: #f8f9fa;
+    overflow: visible; /* Allow menus to overflow */
 }
 
 .chat-input-wrapper {
@@ -1243,12 +1245,14 @@ a.project-card:hover .project-title {
     justify-content: space-between;
     align-items: center;
     padding-top: 10px;
+    overflow: visible; /* Allow menus to overflow */
 }
 
 .chat-meta-left, .chat-meta-right {
     display: flex;
     align-items: center;
     gap: 8px;
+    overflow: visible; /* Allow menus to overflow */
 }
 
 .meta-btn {
@@ -1419,6 +1423,7 @@ a.project-card:hover .project-title {
 
 .abilities-container {
     position: relative;
+    overflow: visible; /* Allow menu to overflow */
 }
 
 #advanced-abilities-menu {
@@ -1430,7 +1435,7 @@ a.project-card:hover .project-title {
     border-radius: 12px;
     border: 1px solid #e1e5e9;
     box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    z-index: 1000;
+    z-index: 9999; /* Highest z-index to ensure it's on top */
     padding: 16px;
     display: none; /* JS toggles to flex */
     flex-direction: column;
