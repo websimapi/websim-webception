@@ -655,7 +655,11 @@ a.project-card:hover .project-title {
     height: 100px;
 }
 
-.sidebar-history-item:hover {
+.sidebar-history-item.non-interactive {
+    cursor: default;
+}
+
+.sidebar-history-item:not(.non-interactive):hover {
     background-color: #f0f2f5;
 }
 
@@ -743,7 +747,7 @@ a.project-card:hover .project-title {
     overflow: hidden;
     word-break: break-word;
     /* The prompt text is now the only element in flow, it will fill the space */
-    padding-top: 2px; /* Give it some space from the top */
+    padding-top: 8px; /* Give it some space from the top */
 }
 
 .history-meta-stats {
@@ -767,7 +771,7 @@ a.project-card:hover .project-title {
     pointer-events: none;
 }
 
-.sidebar-history-item:hover .history-meta-stats {
+.sidebar-history-item:not(.non-interactive):hover .history-meta-stats {
     opacity: 1;
 }
 
@@ -811,8 +815,8 @@ a.project-card:hover .project-title {
     transition: opacity 0.2s ease-in-out;
 }
 
-.sidebar-history-item:hover .history-item-right > .history-action-btn,
-.sidebar-history-item:hover .history-item-right .history-item-right-bottom-actions {
+.sidebar-history-item:not(.non-interactive):hover .history-item-right > .history-action-btn,
+.sidebar-history-item:not(.non-interactive):hover .history-item-right .history-item-right-bottom-actions {
     opacity: 1;
     pointer-events: auto;
 }

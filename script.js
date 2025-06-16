@@ -252,6 +252,20 @@ document.addEventListener('DOMContentLoaded', function() {
             setFailedState();
         }
         
+        // Add click handler for navigation
+        if (!isCurrentVersion && site && site.versioned_link_url) {
+            li.addEventListener('click', (e) => {
+                // Prevent navigation if a button inside the item was clicked
+                if (e.target.closest('.history-action-btn')) {
+                    return;
+                }
+                window.location.href = site.versioned_link_url;
+            });
+        } else {
+            // If it's the current version or there's no link, make it non-interactive
+            li.classList.add('non-interactive');
+        }
+        
         return li;
     }
 
