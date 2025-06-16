@@ -1571,37 +1571,16 @@ a.project-card:hover .project-title {
 .visibility-item {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
+    padding: 10px 9px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     color: #374151;
-    gap: 12px;
+    gap: 10px;
     transition: background-color 0.15s ease-in-out;
 }
 
 .visibility-item:hover {
     background-color: #f3f4f6;
-}
-
-.visibility-item i {
-    width: 16px;
-    text-align: center;
-    color: #6b7280;
-}
-
-.visibility-item .visibility-name {
-    flex-grow: 1;
-}
-
-.visibility-item .visibility-check {
-    width: 16px;
-    visibility: hidden;
-    color: #3b82f6; /* Blue checkmark */
-    font-size: 13px;
-}
-
-.visibility-item.active .visibility-check {
-    visibility: visible;
 }
