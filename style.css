@@ -632,8 +632,8 @@ a.project-card:hover .project-title {
 .sidebar-history-item {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 12px;
-    padding: 12px;
+    gap: 8px;
+    padding: 8px;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     background-color: #f8f9fa;
@@ -666,7 +666,7 @@ a.project-card:hover .project-title {
 .history-item-center {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     min-width: 0;
 }
 
@@ -701,10 +701,10 @@ a.project-card:hover .project-title {
 .history-prompt-text {
     color: #111827;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.4;
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
