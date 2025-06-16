@@ -227,29 +227,94 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Sidebar history list element not found.');
             return;
         }
-
-        historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Loading history...</li>';
-
+        const sidebarContent = historyList.parentElement;
+    
+        // Static state for pagination, reset only when project ID changes.
+        // Using a static variable inside the function scope.
+        if (!loadProjectHistory.state || loadProjectHistory.state.projectId !== projectId) {
+            loadProjectHistory.state = {
+                projectId: projectId,
+                isLoading: false,
+                nextCursor: null,
+                hasMore: true,
+                limit: 25,
+            };
+            historyList.innerHTML = ''; // Clear old project data
+            sidebarContent.scrollTop = 0; // Reset scroll
+    
+            // Setup scroll listener only once per sidebar content element
+            if (!sidebarContent.dataset.historyListener) {
+                sidebarContent.addEventListener('scroll', () => {
+                    // When scrolled near the top, load more.
+                    if (sidebarContent.scrollTop < 200 && loadProjectHistory.state && loadProjectHistory.state.projectId) {
+                        loadProjectHistory(loadProjectHistory.state.projectId);
+                    }
+                });
+                sidebarContent.dataset.historyListener = 'true';
+            }
+        }
+    
+        const state = loadProjectHistory.state;
+        if (state.isLoading || !state.hasMore) {
+            return;
+        }
+    
+        state.isLoading = true;
+        const isInitialLoad = !state.nextCursor;
+    
+        if (isInitialLoad) {
+            historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Loading history...</li>';
+        }
+    
         try {
-            const response = await fetch(`/api/v1/projects/${projectId}/revisions`);
+            const url = new URL(`/api/v1/projects/${projectId}/revisions`, window.location.origin);
+            url.searchParams.set('first', state.limit);
+            if (state.nextCursor) {
+                url.searchParams.set('after', state.nextCursor);
+            }
+    
+            const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const { revisions } = await response.json();
-
-            historyList.innerHTML = '';
-
+    
+            if (isInitialLoad) {
+                historyList.innerHTML = '';
+            }
+    
             if (!revisions.data || revisions.data.length === 0) {
-                historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">No history found.</li>';
+                if (isInitialLoad) {
+                    historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">No history found.</li>';
+                }
+                state.hasMore = false;
                 return;
             }
             
+            const oldScrollHeight = sidebarContent.scrollHeight;
+    
             revisions.data.forEach(item => {
                 const li = createHistoryItemElement(item);
-                historyList.appendChild(li);
+                historyList.appendChild(li); // Appending adds to the top visually with column-reverse
             });
-
+    
+            state.hasMore = revisions.meta.has_next_page;
+            state.nextCursor = revisions.meta.end_cursor;
+    
+            if (isInitialLoad) {
+                // After initial load, scroll to the bottom to show the newest items
+                setTimeout(() => sidebarContent.scrollTop = sidebarContent.scrollHeight, 0);
+            } else {
+                // After loading more, adjust scroll to keep user's position stable
+                const newScrollHeight = sidebarContent.scrollHeight;
+                sidebarContent.scrollTop += newScrollHeight - oldScrollHeight;
+            }
+    
         } catch (error) {
             console.error("Failed to fetch project history:", error);
-            historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Failed to load history.</li>';
+            if (isInitialLoad) {
+                historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Failed to load history.</li>';
+            }
+        } finally {
+            if(state) state.isLoading = false;
         }
     }
 
