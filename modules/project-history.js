@@ -169,6 +169,8 @@ export class ProjectHistoryManager {
             state.isRefreshing = true;
 
             try {
+                const oldBookmarkedVersion = this.currentProject?.current_version;
+
                 // Get fresh project data for correct bookmark
                 const projectResponse = await fetch(`/api/v1/projects/${projectId}`);
                 if (projectResponse.ok) {
@@ -179,6 +181,12 @@ export class ProjectHistoryManager {
                     const branchStatValue = document.getElementById('branch-stat-value');
                     if (branchStatValue && this.currentProject && this.currentProject.current_version != null) {
                         branchStatValue.textContent = this.currentProject.current_version;
+                    }
+
+                    // If bookmark changed, recalculate main branch and update styles
+                    if (this.ancestryPathBuilt && this.currentProject.current_version !== oldBookmarkedVersion) {
+                        this.recalculateMainBranchPath();
+                        this.updateRenderedItemsStyle();
                     }
                 }
 
@@ -342,6 +350,17 @@ export class ProjectHistoryManager {
             }
         } finally {
             if(state) state.isLoading = false;
+        }
+    }
+
+    recalculateMainBranchPath() {
+        if (!this.currentProject) return;
+
+        this.mainBranchVersions.clear();
+        let currentVersionInPath = this.currentProject.current_version;
+        while (currentVersionInPath) {
+            this.mainBranchVersions.add(currentVersionInPath);
+            currentVersionInPath = this.parentMap.get(currentVersionInPath);
         }
     }
 
