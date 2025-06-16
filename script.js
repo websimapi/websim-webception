@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             <div class="history-item-right">
-                <button class="history-action-btn" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                <button class="history-action-btn" title="Retry Prompt"><i class="fas fa-redo-alt"></i></button>
                 <button class="history-action-btn history-delete-btn" title="Delete"><i class="fas fa-trash-alt"></i></button>
             </div>
         `;
