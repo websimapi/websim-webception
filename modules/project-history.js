@@ -8,6 +8,7 @@ export class ProjectHistoryManager {
         
         this.mainBranchVersions = new Set();
         this.revisionsCache = new Map();
+        this.parentMap = new Map();
         this.ancestryPathBuilt = false;
         
         this.init();
@@ -24,6 +25,13 @@ export class ProjectHistoryManager {
 
     setCurrentProject(project) {
         this.currentProject = project;
+    }
+
+    isRevisionOffBranch(versionNumber) {
+        if (!this.ancestryPathBuilt) return false;
+        const bookmarkedVersion = this.currentProject?.current_version;
+        return !this.mainBranchVersions.has(versionNumber) &&
+               (bookmarkedVersion != null && versionNumber < bookmarkedVersion);
     }
 
     createHistoryItemElement({ project_revision, site }, isOffBranch = false) {
@@ -137,6 +145,7 @@ export class ProjectHistoryManager {
             this.ancestryPathBuilt = false;
             this.mainBranchVersions.clear();
             this.revisionsCache.clear();
+            this.parentMap.clear();
             this.determineMainBranch(projectId).catch(err => {
                 console.error("Failed to determine main branch:", err);
             });
@@ -192,11 +201,14 @@ export class ProjectHistoryManager {
 
                 newItemsData.reverse().forEach(item => {
                     const revisionVersion = item.project_revision.version;
-                    const bookmarkedVersion = this.currentProject?.current_version;
-
-                    const isOffBranch = this.ancestryPathBuilt && 
-                                        !this.mainBranchVersions.has(revisionVersion) &&
-                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
+                    const isOffBranch = this.isRevisionOffBranch(revisionVersion);
+                    
+                    if (isOffBranch) {
+                        const parentVersion = this.parentMap.get(revisionVersion);
+                        if (parentVersion && this.isRevisionOffBranch(parentVersion)) {
+                            return; // Skip rendering nested subversions
+                        }
+                    }
 
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.insertBefore(li, this.historyList.firstChild);
@@ -299,11 +311,14 @@ export class ProjectHistoryManager {
             revisions.data.forEach(item => {
                 if (!this.historyList.querySelector(`[data-version-id="${item.project_revision.id}"]`)) {
                     const revisionVersion = item.project_revision.version;
-                    const bookmarkedVersion = this.currentProject?.current_version;
+                    const isOffBranch = this.isRevisionOffBranch(revisionVersion);
 
-                    const isOffBranch = this.ancestryPathBuilt && 
-                                        !this.mainBranchVersions.has(revisionVersion) &&
-                                        (bookmarkedVersion != null && revisionVersion < bookmarkedVersion);
+                    if (isOffBranch) {
+                        const parentVersion = this.parentMap.get(revisionVersion);
+                        if (parentVersion && this.isRevisionOffBranch(parentVersion)) {
+                            return; // Skip rendering nested subversions
+                        }
+                    }
                                         
                     const li = this.createHistoryItemElement(item, isOffBranch);
                     this.historyList.appendChild(li);
@@ -354,11 +369,11 @@ export class ProjectHistoryManager {
             cursor = revisions.meta.end_cursor;
         }
 
-        const parentMap = new Map();
+        this.parentMap.clear();
         allRevisionsData.forEach(item => {
             this.revisionsCache.set(item.project_revision.version, item);
             if (item.project_revision.parent_revision_version) {
-                parentMap.set(item.project_revision.version, item.project_revision.parent_revision_version);
+                this.parentMap.set(item.project_revision.version, item.project_revision.parent_revision_version);
             }
         });
 
@@ -366,7 +381,7 @@ export class ProjectHistoryManager {
         let currentVersionInPath = this.currentProject?.current_version;
         while (currentVersionInPath) {
             this.mainBranchVersions.add(currentVersionInPath);
-            currentVersionInPath = parentMap.get(currentVersionInPath);
+            currentVersionInPath = this.parentMap.get(currentVersionInPath);
         }
 
         this.ancestryPathBuilt = true;
@@ -382,7 +397,17 @@ export class ProjectHistoryManager {
             const versionNumber = parseInt(li.dataset.versionNumber, 10);
             if (isNaN(versionNumber)) return;
 
-            const shouldBeOffBranch = !this.mainBranchVersions.has(versionNumber) && (bookmarkedVersion != null && versionNumber < bookmarkedVersion);
+            const isOffBranch = this.isRevisionOffBranch(versionNumber);
+
+            if (isOffBranch) {
+                const parentVersion = this.parentMap.get(versionNumber);
+                if (parentVersion && this.isRevisionOffBranch(parentVersion)) {
+                    li.remove(); // Remove nested subversion
+                    return;
+                }
+            }
+
+            const shouldBeOffBranch = isOffBranch;
             const isCurrentlyOffBranch = li.classList.contains('is-off-branch');
 
             if (shouldBeOffBranch !== isCurrentlyOffBranch) {
