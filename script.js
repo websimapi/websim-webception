@@ -4,12 +4,16 @@ import { ProjectHistoryManager } from './modules/project-history.js';
 import { CreatorProjectsManager } from './modules/creator-projects.js';
 import { ProjectFeedManager } from './modules/project-feed.js';
 import { MenuManager } from './modules/menu-manager.js';
+import { SidebarLoader } from './modules/sidebar-loader.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Load sidebar component first
+    await SidebarLoader.loadSidebar();
+    
     let currentProject = null;
     let creator = null;
 
-    // Initialize managers
+    // Initialize managers after sidebar is loaded
     const sidebarManager = new SidebarManager();
     const projectDescriptionManager = new ProjectDescriptionManager();
     const projectHistoryManager = new ProjectHistoryManager();
