@@ -45,7 +45,7 @@
 .actions-top-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
 }
 
 .sidebar-btn-action.post-btn {

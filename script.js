@@ -164,6 +164,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     sidebarProjectTitle.textContent = currentProject.title;
                 }
 
+                const heartCountSpan = document.querySelector('.sidebar-btn-action.heart-icon-btn .heart-count');
+                if (heartCountSpan && currentProject && currentProject.stats && currentProject.stats.likes != null) {
+                    heartCountSpan.textContent = currentProject.stats.likes;
+                }
+
                 const branchStatValue = document.getElementById('branch-stat-value');
                 if (branchStatValue && currentProject && currentProject.current_version != null) {
                     branchStatValue.textContent = currentProject.current_version;
