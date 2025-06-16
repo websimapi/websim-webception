@@ -150,6 +150,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const isPuppeteer = () => navigator.userAgent.includes('HeadlessChrome') || navigator.webdriver;
+
+    async function getMaybeFakeUser() {
+        try {
+            if (window.websim && typeof window.websim.getUser === 'function') {
+                const user = await window.websim.getUser();
+                if (user) return user;
+            }
+        } catch (e) {
+            console.warn("window.websim.getUser() failed. Checking for bot environment.", e);
+        }
+    
+        if (isPuppeteer()) {
+            console.info("Puppeteer/bot environment detected. Using a default user object.");
+            return {
+                id: '00000000-0000-0000-0000-000000000000',
+                username: 'websim_bot',
+                avatar_url: null,
+                created_at: null,
+                description: null,
+                twitter: null,
+                discord_username: null,
+                discord_id: null,
+                is_admin: false
+            };
+        }
+        
+        return null;
+    }
+
     function timeAgo(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -354,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to load user avatars and project info
     async function loadUserDataAndProjectInfo() {
         try {
-            const user = await window.websim.getUser();
+            const user = await getMaybeFakeUser();
             const projectInfo = await window.websim.getCurrentProject();
 
             if (projectInfo && projectInfo.id) {
@@ -386,10 +416,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (addressAvatarImg) {
                     addressAvatarImg.src = avatarSrc;
                     addressAvatarImg.alt = avatarAlt;
+                    addressAvatarImg.onerror = () => { addressAvatarImg.style.visibility = 'hidden'; };
                 }
                 if (sidebarAvatarImg) { 
                     sidebarAvatarImg.src = avatarSrc;
                     sidebarAvatarImg.alt = avatarAlt;
+                    sidebarAvatarImg.onerror = () => { sidebarAvatarImg.style.visibility = 'hidden'; };
                 }
 
             } else {
@@ -519,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Initialize
         try {
-            const user = await window.websim.getUser();
+            const user = await getMaybeFakeUser();
             if (user && user.id) {
                 userId = user.id;
             }
