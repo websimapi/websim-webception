@@ -148,14 +148,122 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function timeAgo(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (minutes < 1) return `0m ago`;
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        return `${days}d ago`;
+    }
+
+    function getIconForPromptType(type) {
+        switch (type) {
+            case 'get':
+            case 'plaintext':
+            case 'continue':
+                return 'fas fa-magic'; // Generation
+            case 'fix':
+                return 'fas fa-wrench'; // Fixing
+            case 'refactor':
+                return 'fas fa-palette'; // Styling, refactoring
+            case 'edit':
+            case 'tweak-edit':
+                return 'fas fa-mouse-pointer'; // Direct interaction
+            case 'manual-edit':
+                return 'fas fa-keyboard'; // Manual code editing
+            default:
+                return 'fas fa-code-branch'; // Default/unknown
+        }
+    }
+
+    function createHistoryItemElement({ project_revision, site }) {
+        const li = document.createElement('li');
+        li.className = 'sidebar-history-item';
+
+        const version = project_revision.version || '??';
+        const promptText = site?.prompt?.text || 'Project version created';
+        const promptType = site?.prompt?.type;
+        const createdAt = project_revision.created_at;
+
+        const iconClass = getIconForPromptType(promptType);
+        
+        const versionTag = document.createElement('span');
+        versionTag.className = 'history-version-tag';
+        versionTag.textContent = `V${version}`;
+        li.appendChild(versionTag);
+
+        const icon = document.createElement('i');
+        icon.className = `${iconClass} history-icon`;
+        li.appendChild(icon);
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'history-item-details';
+        
+        const textSpan = document.createElement('span');
+        textSpan.className = 'history-text';
+        textSpan.textContent = promptText;
+        detailsDiv.appendChild(textSpan);
+
+        const metaSpan = document.createElement('span');
+        metaSpan.className = 'history-meta';
+        metaSpan.textContent = timeAgo(createdAt);
+        detailsDiv.appendChild(metaSpan);
+
+        li.appendChild(detailsDiv);
+        
+        return li;
+    }
+
+    async function loadProjectHistory(projectId) {
+        const historyList = document.querySelector('.sidebar-history-list');
+        if (!historyList) {
+            console.error('Sidebar history list element not found.');
+            return;
+        }
+
+        historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Loading history...</li>';
+
+        try {
+            const response = await fetch(`/api/v1/projects/${projectId}/revisions`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const { revisions } = await response.json();
+
+            historyList.innerHTML = '';
+
+            if (!revisions.data || revisions.data.length === 0) {
+                historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">No history found.</li>';
+                return;
+            }
+            
+            revisions.data.forEach(item => {
+                const li = createHistoryItemElement(item);
+                historyList.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error("Failed to fetch project history:", error);
+            historyList.innerHTML = '<li class="sidebar-history-item" style="padding-left: 20px;">Failed to load history.</li>';
+        }
+    }
+
     // Function to load user avatars and project info
     async function loadUserDataAndProjectInfo() {
         try {
             const user = await window.websim.getUser();
             const project = await window.websim.getCurrentProject();
 
-            if (project && project.title && sidebarProjectTitle) {
-                sidebarProjectTitle.textContent = project.title;
+            if (project) {
+                if (project.title && sidebarProjectTitle) {
+                    sidebarProjectTitle.textContent = project.title;
+                }
+                loadProjectHistory(project.id);
             } else if (sidebarProjectTitle) {
                 sidebarProjectTitle.textContent = document.title || "Project Details"; // Fallback to page title or generic
             }
